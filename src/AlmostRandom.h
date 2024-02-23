@@ -51,10 +51,11 @@ class AlmostRandom{
     
 
   private: 
-     byte randomByte;
-     byte ranalogByte;
-     byte ramdomByte;
-     byte ranclockByte;
+     byte randomByte=0;
+     byte ranalogByte=0;
+     byte ramdomByte=0;
+     byte ranclockByte=0;
+     const static byte byteSize = 8; // size of one byte
      
      struct Flags
      {
@@ -63,11 +64,11 @@ class AlmostRandom{
       bool isEnabledRanclock : 1;
      } flags;
 
-    byte analogPins[8];
+    byte analogPins[byteSize];
 
     byte* ramStart, ramEnd;
 
-    byte* clockAddressA, clockAddressB;
+    byte* timerACountAddress, timerBCountAddress;
 
 
 
