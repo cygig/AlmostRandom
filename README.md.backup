@@ -24,6 +24,7 @@ AlmostRandom is a random number generator for Arduino.
 Constructor to initialise values. 
 
 
+
 ##  _byte_ getRandomByte()
 
 Get a random number as a byte, from 0 to 255.
