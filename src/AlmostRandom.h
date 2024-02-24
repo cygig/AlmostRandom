@@ -51,23 +51,23 @@ class AlmostRandom{
     float getRandomFloat();
 
 
-    void enableRanalog();
-    void disableRanalog();
-    void setRanalog(byte analogPin);
+    void enableRanalog(bool myEnable);
+    bool isEnabledRanalog();
+    void setRanalog(byte myAnalogPin);
     void setRanalog(byte myAnalogPins[byteSize]);
-    void setEvenIsZero(bool myIsEvenZero);
+    void setEvenIsZero(bool myEvenIsZero);
     bool isEvenZero();
     byte getRanalog();
     byte getLastRanalog();
 
-    void enableRamdom();
-    void disableRamdom();
+    void enableRamdom(bool myEnable);
+    bool isEnabledRamdom();
     void setRamdom(byte* ramStart, byte* ramEnd);
     byte getRamdom();
     byte getLastRamdom();
 
-    void enableRanclock();
-    void disableRanclock();
+    void enableRanclock(bool myEnable);
+    bool isEnabledRanclock();
     void setRanclock(byte* clockAddressA, byte* clockAddressB);
     byte getRanclock();
     byte getLastRanclock();

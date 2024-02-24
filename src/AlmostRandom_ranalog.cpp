@@ -1,15 +1,15 @@
 #include "AlmostRandom.h"
 
-void AlmostRandom::enableRanalog()
+void AlmostRandom::enableRanalog(bool myEnable)
 {
-  flags.enableRanalog = true;  
+  flags.enableRanalog = myEnable;  
 }
 
 
 
-void AlmostRandom::disableRanalog()
+bool AlmostRandom::isEnabledRanalog()
 {
-  flags.enableRanalog = false; 
+  return flags.enableRanalog; 
 }
 
 
@@ -26,6 +26,8 @@ void AlmostRandom::setRanalog(byte myAnalogPins[byteSize])
   for (byte i=0; i<byteSize; i++){ analogPins[i]=myAnalogPins[i]; }
 }
 
+
+
 void AlmostRandom::setEvenIsZero(bool myEvenIsZero)
 {
   flags.evenIsZero = myEvenIsZero;
@@ -35,8 +37,10 @@ void AlmostRandom::setEvenIsZero(bool myEvenIsZero)
 
 bool AlmostRandom::isEvenZero()
 {
-  return flags.isEvenZero;
+  return flags.evenIsZero;
 }
+
+
 
 byte AlmostRandom::getRanalog()
 {
@@ -48,19 +52,18 @@ byte AlmostRandom::getRanalog()
     unsigned int reading = analogRead(analogPins[i]);
     bool readingIsEven = (reading%2==0) ? true : false;
 
-    // Early return, if result is even and even is zero, or if result is odd and odd is zero, 
-    // no need to write anything since result is all zeros to begin with
-    if (readingIsEven && flags.isEvenZero) continue;
-    if (!readingIsEven && !flags.isEvenZero) continue;
+    // Set bit if reading is even and even is one OR reading is odd and odd is one
+    if ( (readingIsEven && !flags.evenIsZero) || (!readingIsEven && flags.evenIsZero))
+        result |= resultMask;
 
-    // Set bit and advance the mask
-    result |= resultMask;
+    // Advance the mask
     resultMask <<=1;
   }
 
   ranalogByte = result;
   return result;
 }
+
 
 
 byte AlmostRandom::getLastRanalog()
