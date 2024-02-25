@@ -14,33 +14,13 @@ AlmostRandom by cygig
 
 
 class AlmostRandom{
-  private: 
-    const static byte byteSize = 8; // size of one byte
-     byte randomByte=0;
-     byte ranalogByte=0;
-     byte ramdomByte=0;
-     byte ranclockByte=0;
-
-     struct Flags
-     {
-      bool enableRanalog : 1;
-      bool enableRamdom : 1;
-      bool enableRanclock : 1;
-      bool evenIsZero : 1;
-     } flags;
-
-    // Ranalog
-    byte analogPins[byteSize];
-
-    // Ramdom
-    byte* ramStart, ramEnd;
-
-    // Ranclock
-    byte* timerACountAddress, timerBCountAddress;
-
 
   public:
     AlmostRandom();
+
+    // Constants
+    const static byte byteSize = 8; // size of one byte
+
     byte getRandomByte();
     byte getLastRandomByte();
 
@@ -62,7 +42,7 @@ class AlmostRandom{
 
     void enableRamdom(bool myEnable);
     bool isEnabledRamdom();
-    void setRamdom(byte* ramStart, byte* ramEnd);
+    void setRamdom(byte* myRamStart, byte* myRamEnd);
     byte getRamdom();
     byte getLastRamdom();
 
@@ -71,10 +51,35 @@ class AlmostRandom{
     void setRanclock(byte* clockAddressA, byte* clockAddressB);
     byte getRanclock();
     byte getLastRanclock();
+
+    void useCurrentTime(bool myEnable);
+    bool isUsingCurrentTime();
     
+  private: 
+     byte random_Byte=0; // do not confused with ramdomByte
+     byte ranalogByte=0;
+     byte ramdomByte=0;
+     byte ranclockByte=0;
 
+     struct Flags
+     {
+      bool enableRanalog : 1;
+      bool enableRamdom : 1;
+      bool enableRanclock : 1;
+      bool evenIsZero : 1;
+      bool useCurrentTime : 1;
+     } flags;
 
+    // Ranalog
+    byte analogPins[byteSize];
 
+    // Ramdom
+    // This is the correct way to chain declare pointers,
+    // byte* ramStart, ramEnd will make ramEnd a normal byte instead of pointer.
+    byte *ramStart, *ramEnd;
+
+    // Ranclock
+    byte *timerACountAddress, *timerBCountAddress;
 
 };
 

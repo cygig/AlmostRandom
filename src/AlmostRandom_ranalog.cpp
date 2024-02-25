@@ -44,6 +44,9 @@ bool AlmostRandom::isEvenZero()
 
 byte AlmostRandom::getRanalog()
 {
+  // Early return if ranalog is disabled
+  if (flags.enableRanalog==false) return 0;
+
   byte result=0;
   byte resultMask=1;
 

@@ -11,6 +11,7 @@ AlmostRandom::AlmostRandom()
   flags.enableRamdom = true;
   flags.enableRanclock = true;
   flags.evenIsZero = true;
+  flags.useCurrentTime = false;
     
 
   //== Initialise Analog Pins ==//
