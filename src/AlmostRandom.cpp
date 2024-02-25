@@ -7,11 +7,12 @@ AlmostRandom::AlmostRandom()
   // The addresses of the timers and ram can be found in the respective datasheets
 
   // Enable everything first, we disable them later if we do not have the information
+  // Rainput is opt-in
   flags.enableRanalog = true;
   flags.enableRamdom = true;
   flags.enableRanclock = true;
+  flags.enableRainput = false;
   flags.evenIsZero = true;
-  flags.useCurrentTime = false;
     
 
   //== Initialise Analog Pins ==//

@@ -20,6 +20,7 @@ class AlmostRandom{
 
     // Constants
     const static byte byteSize = 8; // size of one byte
+    const static byte byteMask = 255; // basically 0b11111111
 
     byte getRandomByte();
     byte getLastRandomByte();
@@ -35,7 +36,7 @@ class AlmostRandom{
     bool isEnabledRanalog();
     void setRanalog(byte myAnalogPin);
     void setRanalog(byte myAnalogPins[byteSize]);
-    void setEvenIsZero(bool myEvenIsZero);
+    void setEvenIsZero (bool myEvenIsZero);
     bool isEvenZero();
     byte getRanalog();
     byte getLastRanalog();
@@ -48,26 +49,30 @@ class AlmostRandom{
 
     void enableRanclock(bool myEnable);
     bool isEnabledRanclock();
-    void setRanclock(byte* clockAddressA, byte* clockAddressB);
+    void setRanclock(byte* myTimerACountAddress, byte* myTimerBCountAddress);
     byte getRanclock();
     byte getLastRanclock();
 
-    void useCurrentTime(bool myEnable);
-    bool isUsingCurrentTime();
+    void enableRainput(bool myEnable);
+    bool isEnabledRainput();
+    byte getRainput();
+    byte getLastRainput();
+
     
   private: 
      byte random_Byte=0; // do not confused with ramdomByte
      byte ranalogByte=0;
      byte ramdomByte=0;
      byte ranclockByte=0;
+     byte rainputByte=0;
 
      struct Flags
      {
       bool enableRanalog : 1;
       bool enableRamdom : 1;
       bool enableRanclock : 1;
+      bool enableRainput : 1;
       bool evenIsZero : 1;
-      bool useCurrentTime : 1;
      } flags;
 
     // Ranalog

@@ -37,9 +37,9 @@ void pressEnter(char match, void (*myFunc)())
   //void (*callBackFunction)() = myFunc;
   if (Serial.available()>0)
   {
-    Serial.println("Dirt in Serial");
     char read = Serial.read();
-    if (read==match)
+    //  We ignore the input chat if it is \n, for PUTTY
+    if (read==match || match=='\n')
     {
       Serial.println("Command recognised!");
       myFunc();
@@ -53,11 +53,13 @@ void pressEnter(char match, void (*myFunc)())
 
 void test()
 {
-  unsigned long start, stop;
-  start = millis();
-  for (unsigned int i=0; i<10000; i++)
-    ar.getRamdom();
+  //unsigned long start, stop;
+  //start = millis();
+  unsigned long loops = 10000;
 
-  stop = millis();
-  Serial.println(stop-start);
+  for (unsigned int i=0; i<loops; i++)
+    Serial.println(ar.getRanclock());
+
+  //stop = millis();
+  //Serial.println(stop-start);
 }
