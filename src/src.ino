@@ -1,7 +1,7 @@
 #include "AlmostRandom.h"
 
 AlmostRandom ar;
-byte pins[8] = {1,2,3,4,5,8,9,10};
+byte pins[8] = {1,2,3,6,7,8,9,10};
 
 void setup()
 {
@@ -11,7 +11,7 @@ void setup()
   // unsigned long start, stop;
   // unsigned long loops=10000;
   
-  ar.setRanalog(2);
+  ar.setRanalog(pins);
 
   /*
   start=millis();
@@ -53,13 +53,14 @@ void pressEnter(char match, void (*myFunc)())
 
 void test()
 {
-  //unsigned long start, stop;
-  //start = millis();
+  unsigned long start, stop;
+  start = millis();
   unsigned long loops = 10000;
 
-  for (unsigned int i=0; i<loops; i++)
-    Serial.println(ar.getRanclock());
 
-  //stop = millis();
-  //Serial.println(stop-start);
+  for (unsigned int i=0; i<loops; i++)
+   ar.getRainput();
+
+  stop = millis();
+  Serial.println(stop-start);
 }

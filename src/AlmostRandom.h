@@ -58,6 +58,8 @@ class AlmostRandom{
     byte getRainput();
     byte getLastRainput();
 
+    static void toBin(char myString[], byte stringLen, unsigned long myLong, byte bitCount);
+
     
   private: 
      byte random_Byte=0; // do not confused with ramdomByte

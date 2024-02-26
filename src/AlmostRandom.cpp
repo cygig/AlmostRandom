@@ -115,6 +115,35 @@ AlmostRandom::AlmostRandom()
   #endif
 
 }
+
+void AlmostRandom::toBin(char charArr[], byte charArrSize, unsigned long myLong, byte bitCount)
+{
+  const byte maxSize=32; // We handle up to 32 bit or 4 bytes long max
+  unsigned long bitMask = 1; // our mask will be the same size
+
+  // We force bitCount not to exceed maxSize
+  if (bitCount > maxSize)
+    bitCount = maxSize;
+
+  // For charArrSize to be bigger by at least 1
+  if (charArrSize < bitCount+1)
+    bitCount = charArrSize-1;
+
+  /*
+  We start from second last element and work our way down to 0. 
+  If we have an array of 9 elements, we start from number 7 (8 being null), to 0. 
+  If masking the bit gives an answer more than zero, that bit is a 1, thurs we write '1'. 
+  Then we advance the bitmask.
+  */
+  for (int i=bitCount-1; i>=0; i--)
+  {
+    charArr[i] = ( (myLong & bitMask) >0 ) ? '1' : '0';
+    bitMask <<= 1;
+  }
+
+  charArr[bitCount] = '\0';
+  
+}
   
 
 
