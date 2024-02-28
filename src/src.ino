@@ -27,7 +27,7 @@ void setup()
 void loop()
 {
 
-  pressEnter('\n', test);  
+  pressEnter('s', test);  
 
 
 }
@@ -38,29 +38,41 @@ void pressEnter(char match, void (*myFunc)())
   if (Serial.available()>0)
   {
     char read = Serial.read();
+
+    Serial.print("Iput detected: ");
+
+    if (read<=32)
+      Serial.println((byte)read);
+    else
+      Serial.println(read);
+
     //  We ignore the input chat if it is \n, for PUTTY
-    if (read==match || match=='\n')
+    if (read==match || read=='\n')
     {
-      Serial.println("Command recognised!");
+      Serial.println("Executing...");
       myFunc();
     }
-  }
 
-  while (Serial.available()>0)
-    Serial.read();
+    delay(10); // Wait for data to arrive at the Serial buffer
+    while (Serial.available()>0) Serial.read(); // Flush Serial
+
+  }
   
 }
 
 void test()
 {
-  unsigned long start, stop;
-  start = millis();
   unsigned long loops = 10000;
 
+  unsigned long start, stop;
+  start = millis();
 
   for (unsigned int i=0; i<loops; i++)
-   ar.getRainput();
+  {
+    ar.getRanalog();
+  }
 
   stop = millis();
+  Serial.print("Ranalog Time:")
   Serial.println(stop-start);
 }

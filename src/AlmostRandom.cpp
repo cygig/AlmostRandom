@@ -11,7 +11,7 @@ AlmostRandom::AlmostRandom()
   flags.enableRanalog = true;
   flags.enableRamdom = true;
   flags.enableRanclock = true;
-  flags.enableRainput = false;
+  flags.enableRainput = true;
   flags.evenIsZero = true;
     
 
@@ -116,32 +116,79 @@ AlmostRandom::AlmostRandom()
 
 }
 
-void AlmostRandom::toBin(char charArr[], byte charArrSize, unsigned long myLong, byte bitCount)
+byte AlmostRandom::getRandomByte()
 {
-  const byte maxSize=32; // We handle up to 32 bit or 4 bytes long max
-  unsigned long bitMask = 1; // our mask will be the same size
+  byte result = 0;
+  flags.runCode=0;
+
+  if (flags.enableRanalog)
+  {
+    result ^= getRanalog();
+    flags.runCode |= 0b1000;
+  }
+  
+  {
+  if (flags.enableRamdom)
+    result ^= getRamdom();
+    flags.runCode |= 0b0100;
+  }
+  
+  if (flags.enableRanclock)
+  {
+    result ^= getRanclock();
+    flags.runCode |= 0b0010;
+  }
+  
+  if (flags.enableRainput)
+  {
+    result ^= getRainput();
+    flags.runCode |= 0b0001;
+  }
+  
+  random_Byte = result;
+
+  return result;
+
+}
+
+byte AlmostRandom::getLastRunCode()
+{
+  return flags.runCode;
+}
+
+
+
+char* AlmostRandom::toBin(unsigned long myLong, byte bitCount)
+{
+
+  const byte maxBitSize=32; // We handle up to 32 bit or 4 bytes or unsigned long max by default
+  uint32_t bitMask = 1; // our mask will be the same size as maxBitSize
+  static char result[maxBitSize+1]; // +1 for \0, also static so it remains in ram
 
   // We force bitCount not to exceed maxSize
-  if (bitCount > maxSize)
-    bitCount = maxSize;
-
-  // For charArrSize to be bigger by at least 1
-  if (charArrSize < bitCount+1)
-    bitCount = charArrSize-1;
+  if (bitCount > maxBitSize)
+    bitCount = maxBitSize;
 
   /*
-  We start from second last element and work our way down to 0. 
-  If we have an array of 9 elements, we start from number 7 (8 being null), to 0. 
+  We start from bitCount-1 element and work our way down to 0.
+  bitCount will definitely <= arrary size-1
+
+  Imagine if arraySize is 16. bitCount is 8. 
+  0   1   2   3   4   5   6   7   8    9    10  11  12  13  14  15 
+  [X] [X] [X] [X] [X] [X] [X] [X] [\0] [ ] [ ] [ ] [ ] [ ] [ ] [ ] 
+  
   If masking the bit gives an answer more than zero, that bit is a 1, thurs we write '1'. 
   Then we advance the bitmask.
   */
   for (int i=bitCount-1; i>=0; i--)
   {
-    charArr[i] = ( (myLong & bitMask) >0 ) ? '1' : '0';
+    result[i] = ( (myLong & bitMask) > 0 ) ? '1' : '0';
     bitMask <<= 1;
   }
 
-  charArr[bitCount] = '\0';
+  result[bitCount] = '\0';
+
+  return result;
   
 }
   

@@ -17,6 +17,8 @@ bool AlmostRandom::isEnabledRainput()
 
 byte AlmostRandom::getRainput()
 {
+  // Early return if rainput is disabled
+  if (flags.enableRainput==false) return 0;
 
   byte result = 0;
   unsigned long milliz = millis();

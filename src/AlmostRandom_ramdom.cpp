@@ -28,6 +28,9 @@ void AlmostRandom::setRamdom(byte* myRamStart, byte* myRamEnd)
 
 byte AlmostRandom::getRamdom()
 {
+  // Early return if ramdom is disabled
+  if (flags.enableRamdom==false) return 0;
+
   byte result=0;
   for (byte* i=ramStart; i<=ramEnd; i++)
   {

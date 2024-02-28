@@ -24,6 +24,7 @@ class AlmostRandom{
 
     byte getRandomByte();
     byte getLastRandomByte();
+    byte getLastRunCode();
 
     int16_t getRandomInt();
     uint16_t getRandomUInt();
@@ -58,7 +59,7 @@ class AlmostRandom{
     byte getRainput();
     byte getLastRainput();
 
-    static void toBin(char myString[], byte stringLen, unsigned long myLong, byte bitCount);
+    static char* toBin(unsigned long myLong, byte bitCount);
 
     
   private: 
@@ -75,6 +76,7 @@ class AlmostRandom{
       bool enableRanclock : 1;
       bool enableRainput : 1;
       bool evenIsZero : 1;
+      byte runCode : 4;
      } flags;
 
     // Ranalog
