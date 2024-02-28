@@ -27,7 +27,7 @@ void setup()
 void loop()
 {
 
-  pressEnter('s', test);  
+  pressEnter('s', timeTest);  
 
 
 }
@@ -60,19 +60,67 @@ void pressEnter(char match, void (*myFunc)())
   
 }
 
-void test()
+
+
+void timeTest()
 {
   unsigned long loops = 10000;
-
   unsigned long start, stop;
-  start = millis();
 
+  start = millis();
   for (unsigned int i=0; i<loops; i++)
   {
     ar.getRanalog();
   }
-
   stop = millis();
-  Serial.print("Ranalog Time:")
+
+  Serial.print("Ranalog Time: ");
+  Serial.println(stop-start);
+
+  
+  start = millis();
+  for (unsigned int i=0; i<loops; i++)
+  {
+    ar.getRamdom();
+  }
+  stop = millis();
+
+  Serial.print("Ramdom Time: ");
+  Serial.println(stop-start);
+
+
+  
+  start = millis();
+  for (unsigned int i=0; i<loops; i++)
+  {
+    ar.getRanclock();
+  }
+  stop = millis();
+
+  Serial.print("Ranclock Time: ");
+  Serial.println(stop-start);
+
+
+  
+  start = millis();
+  for (unsigned int i=0; i<loops; i++)
+  {
+    ar.getRainput();
+  }
+  stop = millis();
+
+  Serial.print("Rainput Time: ");
+  Serial.println(stop-start);
+
+
+
+  start = millis();
+  for (unsigned int i=0; i<loops; i++)
+  {
+    ar.getRandomByte();
+  }
+  stop = millis();
+
+  Serial.print("AlmostRandom Time: ");
   Serial.println(stop-start);
 }

@@ -1,0 +1,127 @@
+
+
+Symbols from C:\Users\cygig\AppData\Local\Temp\arduino\sketches\95756438396B5BA2255FF00F9CFE791E/src.ino.elf:
+
+Name                  Value   Class        Type         Size     Line  Section
+
+__heap_end          |00000000|   W  |            NOTYPE|        |     |*ABS*
+__TEXT_REGION_ORIGIN__|00000000|   W  |            NOTYPE|        |     |*ABS*
+__tmp_reg__         |00000000|   a  |            NOTYPE|        |     |*ABS*
+__vector_default    |00000000|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:61
+__vectors           |00000000|   T  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:61
+__zero_reg__        |00000001|   a  |            NOTYPE|        |     |*ABS*
+__FUSE_REGION_LENGTH__|0000000a|   A  |            NOTYPE|        |     |*ABS*
+__CCP__             |00000034|   a  |            NOTYPE|        |     |*ABS*
+__SP_L__            |0000003d|   a  |            NOTYPE|        |     |*ABS*
+__SP_H__            |0000003e|   a  |            NOTYPE|        |     |*ABS*
+__SREG__            |0000003f|   a  |            NOTYPE|        |     |*ABS*
+__ctors_start       |00000078|   T  |            NOTYPE|        |     |.text
+__trampolines_end   |00000078|   T  |            NOTYPE|        |     |.text
+__trampolines_start |00000078|   T  |            NOTYPE|        |     |.text
+__ctors_end         |0000007a|   T  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:230
+__dtors_end         |0000007a|   T  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:230
+__dtors_start       |0000007a|   T  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:230
+__init              |0000007a|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:230
+_initThreeStuff()   |00000086|   T  |              FUNC|00000018|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/main.cpp:149
+__do_copy_data      |0000009e|   T  |            NOTYPE|00000016|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2409
+__do_clear_bss      |000000b4|   T  |            NOTYPE|00000010|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2441
+.do_clear_bss_loop  |000000bc|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2446
+.do_clear_bss_start |000000be|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2448
+__do_global_ctors   |000000c4|   T  |            NOTYPE|00000014|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2466
+__bad_interrupt     |000000dc|   T  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_1          |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_10         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_11         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_12         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_13         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_14         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_15         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_16         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_2          |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_20         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_21         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_22         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_23         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_24         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_26         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_27         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_28         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_29         |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_3          |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_4          |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_5          |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_6          |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_7          |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_8          |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+__vector_9          |000000dc|   W  |            NOTYPE|        |     |.text	../../../../crt1/gcrt1.S:315
+micros              |000000de|   t  |              FUNC|0000007c|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring.c:499
+__EEPROM_REGION_LENGTH__|00000100|   A  |            NOTYPE|        |     |*ABS*
+millis              |0000015a|   t  |              FUNC|00000018|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring.c:436
+AlmostRandom::getRainput() [clone .part.0] [clone .constprop.29]|00000172|   t  |              FUNC|0000007e|     |.text	C:\Users\cygig\Desktop\AlmostRandom\src/AlmostRandom_rainput.cpp:18
+Print::write(unsigned char const*, unsigned int)|000001f0|   t  |              FUNC|0000005a|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore\api/Print.cpp:29
+HardwareSerial::availableForWrite()|0000024a|   t  |              FUNC|0000001e|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:718
+HardwareSerial::read()|00000268|   t  |              FUNC|00000028|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:702
+HardwareSerial::peek()|00000290|   t  |              FUNC|0000001c|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:694
+HardwareSerial::available()|000002ac|   t  |              FUNC|00000018|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:690
+HardwareSerial::_poll_tx_data_empty()|000002c4|   t  |              FUNC|0000003a|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:423
+_poll_dre_done      |000002fc|   t  |            NOTYPE|        |     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:477
+HardwareSerial::write(unsigned char)|000002fe|   t  |              FUNC|00000098|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:758
+HardwareSerial::flush()|00000396|   t  |              FUNC|00000028|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:727
+AlmostRandom::getRanalog() [clone .part.0] [clone .constprop.23]|000003be|   t  |              FUNC|000000b8|     |.text	C:\Users\cygig\Desktop\AlmostRandom\src/AlmostRandom_ranalog.cpp:59
+__LOCK_REGION_LENGTH__|00000400|   A  |            NOTYPE|        |     |*ABS*
+__SIGNATURE_REGION_LENGTH__|00000400|   A  |            NOTYPE|        |     |*ABS*
+__USER_SIGNATURE_REGION_LENGTH__|00000400|   A  |            NOTYPE|        |     |*ABS*
+pinMode             |00000476|   t  |              FUNC|0000004a|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring_digital.c:41
+Print::write(char const*) [clone .part.2] [clone .constprop.19]|000004c0|   t  |              FUNC|00000018|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore\api/Print.h:56
+Print::printNumber(unsigned long, unsigned char) [clone .constprop.16]|000004d8|   t  |              FUNC|00000078|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore\api/Print.cpp:215
+Print::println(unsigned long, int) [clone .constprop.13]|00000550|   t  |              FUNC|0000001a|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore\api/Print.cpp:105
+__vector_25         |0000056a|   T  |              FUNC|00000038|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring.c:202
+__vector_18         |000005a2|   T  |              FUNC|0000000c|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART0.cpp:113
+__vector_17         |000005ae|   T  |              FUNC|0000000c|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART0.cpp:90
+__vector_19         |000005ba|   T  |              FUNC|0000000a|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART0.cpp:54
+_do_dre             |000005c4|   t  |            NOTYPE|        |     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:384
+_do_dre()           |000005c4|   T  |              FUNC|0000005c|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:301
+_poll_dre           |000005d4|   t  |            NOTYPE|        |     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:384
+_done_dre_irq       |00000602|   t  |            NOTYPE|        |     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:384
+_do_rxc             |00000620|   t  |            NOTYPE|        |     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:249
+_do_rxc()           |00000620|   T  |              FUNC|0000005a|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:171
+_end_rxc            |0000065e|   t  |            NOTYPE|        |     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:249
+_buff_full_rxc      |00000676|   t  |            NOTYPE|        |     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:249
+_do_txc             |0000067a|   t  |            NOTYPE|        |     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:124
+_do_txc()           |0000067a|   T  |              FUNC|00000032|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:88
+_txc_flush_rx       |0000068c|   t  |            NOTYPE|        |     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART.cpp:124
+global constructors keyed to 65535_0_AlmostRandom.cpp.o.2698|000006ac|   t  |              FUNC|000000ce|     |.text
+main                |0000077a|   T  |              FUNC|00000432|     |.text	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/main.cpp:49
+__udivmodsi4        |00000bac|   T  |            NOTYPE|00000044|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1638
+__udivmodsi4_loop   |00000bb8|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1646
+__udivmodsi4_ep     |00000bd2|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1660
+__muluhisi3         |00000bf0|   T  |            NOTYPE|00000014|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:626
+__DATA_REGION_LENGTH__|00000c00|   A  |            NOTYPE|        |     |*ABS*
+__tablejump2__      |00000c04|   T  |            NOTYPE|0000000c|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2296
+__umulhisi3         |00000c10|   T  |            NOTYPE|0000001e|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:564
+_exit               |00000c2e|   T  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2278
+exit                |00000c2e|   W  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2278
+__stop_program      |00000c30|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2280
+_etext              |00000c32|   T  |            NOTYPE|        |     |.text
+__data_load_start   |00000ce0|   A  |            NOTYPE|        |     |*ABS*
+__data_load_end     |00000ce8|   A  |            NOTYPE|        |     |*ABS*
+__stack             |00003fff|   W  |            NOTYPE|        |     |*ABS*
+__RODATA_PM_OFFSET__|00008000|   A  |            NOTYPE|        |     |*ABS*
+__TEXT_REGION_LENGTH__|00008000|   A  |            NOTYPE|        |     |*ABS*
+_usart_pins         |00008c32|   r  |            OBJECT|00000008|     |.rodata
+digital_pin_to_bit_position|00008c3a|   r  |            OBJECT|0000000c|     |.rodata	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\variants\txy4/pins_arduino.h:237
+digital_pin_to_port |00008c46|   r  |            OBJECT|0000000c|     |.rodata	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\variants\txy4/pins_arduino.h:218
+digital_pin_to_bit_mask|00008c52|   r  |            OBJECT|0000000c|     |.rodata	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\variants\txy4/pins_arduino.h:256
+vtable for HardwareSerial|00008c5e|   r  |            OBJECT|00000012|     |.rodata
+__DATA_REGION_ORIGIN__|00803400|   A  |            NOTYPE|        |     |*ABS*
+__data_start        |00803400|   D  |            NOTYPE|        |     |.data
+pins                |00803400|   d  |            OBJECT|00000008|     |.data	C:\Users\cygig\Desktop\AlmostRandom\src/src.ino:4
+__bss_start         |00803408|   B  |            NOTYPE|        |     |.bss
+__data_end          |00803408|   D  |            NOTYPE|        |     |.data
+_edata              |00803408|   D  |            NOTYPE|        |     |.data
+timingStruct        |00803408|   b  |            OBJECT|00000004|     |.bss	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring.c:189
+Serial0             |0080340c|   b  |            OBJECT|00000091|     |.bss	C:\Users\cygig\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/UART0.cpp:130
+ar                  |0080349d|   b  |            OBJECT|00000017|     |.bss	C:\Users\cygig\Desktop\AlmostRandom\src/src.ino:3
+__bss_end           |008034b4|   B  |            NOTYPE|        |     |.bss
+_end                |008034b4|   N  |            NOTYPE|        |     |.comment
+__eeprom_end        |00810000|   N  |            NOTYPE|        |     |.comment
