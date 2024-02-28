@@ -38,7 +38,35 @@ randomSeed( analogRead(A0) );
 long randNumber = random(10, 10000);
 Serial.println(randNumber);
 ```
-The idea is a floating (unconnected) pin will be
+The idea is a floating (unconnected) pin will measure surround electromagnetic interference (EMI) to produce a random reading. However, calling `analogRead()` 10,000 times and plotting the readings seems to tell a different story:
+
+![image](extras/analogRead_Frequency_(No_Antenna).jpg)
+
+It seems like less than half of the possible values from 0 to 1023 were produced at least once, and there is a discernible 'U' shape with spikes at the end. This may not even make for a good seed.
+
+Out of curiosity, I decided to look at the parity of the readings. It means seeing how many of the readings are odd and how many are even:
+
+![](extras/analogRead_Parity_(No_Antenna).jpg)
+
+Throughout three sets of 10,000 readings, the ratios of odd to even number come close to 50:50. This effectively makes the parity of `analogRead()` a coin toss. A bit can be a one or zero, so if the microcontroller unit (MCU) "toss" this coin eight times, it would be able to produce one random byte (eight bits in one byte).
+
+I dub this the "Ranalog" method and this is how the distribution looks like:
+
+![](extras/Ranalog_Frequency_(No_Antenna).jpg)
+
+I supposed that extending the pin with a wire will make it into an antenna, and hopefully this antenna will be able to pick up EMI more randomly, as such, I attached a 6.5 and 10.0cm antenna via a breadboard:
+
+![](extras/Ranalog_Frequency_(6.5cm_Antenna).jpg)
+![](extras/Ranalog_Frequency_(10.0cm_Antenna).jpg)
+
+And finally, I stuck eight antenna of different length, one to each pin:
+
+![](extras/Ranalog_Frequency_(Multi_Antennae).jpg)
+
+
+
+
+
 
 ## Ramdom: Chaotic RAM
 
