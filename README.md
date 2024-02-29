@@ -2,6 +2,18 @@
 
 AlmostRandom is a random number generator for Arduino.
 
+# Contents
+- [Updates](#updates)
+- [Disclaimer](#disclaimer)
+- [Random Numbers](#random-numbers)
+  - [Ranalog: Mix things up for analogRead()!](#ranalog-mix-things-up-for-analogread)
+  - [Ramdom: Chaotic RAM]()
+  - Ranclock: The Clock Jitters
+  - Rainput: Imprecise Humans
+  - AmostRandom: Altogether Now!
+- Public Functions
+- Extra: Setup Photos
+- Extra: Manual Setup for Ramdom and Ranclock
 
 # Updates
 
@@ -91,4 +103,7 @@ Constructor to initialise values.
 ##  _byte_ getRandomByte()
 
 Get a random number as a byte, from 0 to 255.
+
+# Extra: Setup Photos
+# Extra: Manual Setup for Ramdom and Ranclock
 
