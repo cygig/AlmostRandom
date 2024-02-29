@@ -30,6 +30,8 @@ One major problem with pseudo-random numbers is that if one knows the seed and t
 
 There are also methods that are in-between. A coin toss may seem random but if one knows all the initial conditions for the toss, they will be able to predict the outcome. However due to how unpredictable and chaotic a casual coin toss is, it is practically random for a day-to-day non-critical use case. This library aim to deliver such numbers between true and pseudo-random. 
 
+I assume that the fairest random number generator will generated all possible values with equal chances as the number of readings approach infinity, thus I will be using the standard deviation as one of the methods to determine the quality of the random numbers. Standard deviation measures the variation of a reading about its mean average, with lower number suggesting a smaller spread or better consistency.
+
 
 ## Ranalog: Mix things up for analogRead()!
 The reading from analogRead() has been a staple to use as a seed for the Arduino built-in random number generator. It usually goes like this:
@@ -54,16 +56,20 @@ I dub this the "Ranalog" method and this is how the distribution looks like:
 
 ![](extras/Ranalog_Frequency_(No_Antenna).jpg)
 
+Other than some slight spikes here and there, the distribution looks decent with an average standard deviation of 75.4 across the sets. 
+
 I supposed that extending the pin with a wire will make it into an antenna, and hopefully this antenna will be able to pick up EMI more randomly, as such, I attached a 6.5 and 10.0cm antenna via a breadboard:
 
 ![](extras/Ranalog_Frequency_(6.5cm_Antenna).jpg)
 ![](extras/Ranalog_Frequency_(10.0cm_Antenna).jpg)
 
+6.5cm antenna got an average standard deviation of 73.9 while the 10cm antenna netted 74.1, better than having no antenna but extending the antenna seems to get diminishing returns. 
+
 And finally, I stuck eight antenna of different length, one to each pin:
 
 ![](extras/Ranalog_Frequency_(Multi_Antennae).jpg)
 
-
+This one has an average standard deviation of 73.1, beating the rest, but I also used 8 different pins, which may be too much for a MCU.
 
 
 
