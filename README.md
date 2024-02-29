@@ -6,7 +6,7 @@ AlmostRandom is a random number generator for Arduino.
 - [Updates](#updates)
 - [Disclaimer](#disclaimer)
 - [Random Numbers](#random-numbers)
-  - [Ranalog: Mix things up for analogRead()!](#ranalog-mix-things-up-for-analogread)
+  - [Ranalog: Mix things up for analogRead()!](#ranalog-mix-things-up-for-analogread1)
   - [Ramdom: Chaotic RAM]()
   - Ranclock: The Clock Jitters
   - Rainput: Imprecise Humans
@@ -45,7 +45,7 @@ There are also methods that are in-between. A coin toss may seem random but if o
 I assume that the fairest random number generator will generated all possible values with equal chances as the number of readings approach infinity, thus I will be using the standard deviation as one of the methods to determine the quality of the random numbers. Standard deviation measures the variation of a reading about its mean average, with lower number suggesting a smaller spread or better consistency.
 
 
-## Ranalog: Mix things up for analogRead()!
+## Ranalog: Mix things up for analogRead()!1
 The reading from analogRead() has been a staple to use as a seed for the Arduino built-in random number generator. It usually goes like this:
 ```
 randomSeed( analogRead(A0) );
