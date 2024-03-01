@@ -1,7 +1,7 @@
 #include "AlmostRandom.h"
 
 AlmostRandom ar;
-byte pins[8] = {1,2,3,6,7,8,9,10};
+byte pins[8] = {A0,A1,A2,A3,A4,A5,A0,A1};
 
 void setup()
 {
@@ -27,7 +27,7 @@ void setup()
 void loop()
 {
 
-  pressEnter('s', timeTest);  
+  pressEnter('s', randomTest);  
 
 
 }
@@ -60,6 +60,38 @@ void pressEnter(char match, void (*myFunc)())
   
 }
 
+void randomTest()
+{
+  unsigned int loops = 10000;
+  ar.setRanalog (pins);
+
+  Serial.println("Ranalog: ");
+  for (unsigned int i=0; i<loops; i++)
+    Serial.println(ar.getRanalog());
+  Serial.println();
+  
+  Serial.println("Ramdom: ");
+  for (unsigned int i=0; i<loops; i++)
+    Serial.println(ar.getRamdom());
+  Serial.println();
+
+  Serial.println("Ranclock: ");
+  for (unsigned int i=0; i<loops; i++)
+    Serial.println(ar.getRanclock());
+  Serial.println();
+
+  Serial.println("Rainput: ");
+  for (unsigned int i=0; i<loops; i++)
+    Serial.println(ar.getRainput());
+  Serial.println();
+
+  Serial.println("AlmostRandom: ");
+  for (unsigned int i=0; i<loops; i++)
+    Serial.println(ar.getRandomByte());
+  Serial.println();
+
+
+}
 
 
 void timeTest()

@@ -77,7 +77,7 @@ AlmostRandom::AlmostRandom()
       defined(__AVR_ATmega640__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega1281__) || \
       defined(__AVR_ATmega2560__) || defined(__AVR_ATmega2561__)
     timerACountAddress = (byte*)0x46; //8 bit Timer 0
-    timerBCountAddressB = (byte*)0x84; // 16 bit Timer 1
+    timerBCountAddress = (byte*)0x84; // 16 bit Timer 1
 
     byte* timerAControlAddress = (byte*)0x45; 
     byte* timerBControlAddress = (byte*)0x81; 

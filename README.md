@@ -1,6 +1,14 @@
 # AlmostRandom
 
-AlmostRandom is a random number generator for Arduino.
+The AlmostRandom library provides a versatile and unique approach to generating random numbers on Arduino microcontrollers. Unlike traditional methods that rely solely on hardware noise or pseudo-random algorithms, AlmostRandom combines multiple sources of entropy to produce unpredictable and chaotic random numbers suitable for casual, recreational, and non-critical applications.
+
+This library harnesses various sources of randomness, including the parity of analogRead() values, the contents of RAM, and the values of internal timers. By combining these diverse sources, AlmostRandom creates a robust and unpredictable stream of random numbers that are ideal for tasks where high cryptographic strength is not required.
+
+AlmostRandom serves as a compelling alternative to the built-in random() function, offering increased entropy and randomness. While the random() function employs pseudo-random algorithms, AlmostRandom leverages genuine hardware randomness, resulting in more chaotic and unpredictable outputs.
+
+Please note that AlmostRandom is designed for non-critical applications and may not be suitable for tasks requiring high levels of cryptographic strength or security. However, for hobbyist projects, simulations, games, and other recreational purposes, AlmostRandom provides an excellent balance of unpredictability and ease of use.
+
+## Compatible Hardware
 
 # Contents
 - [Updates](#updates)
@@ -57,12 +65,14 @@ I assume that the fairest random number generator will generated all possible va
 
 In all the test, I used the ATtiny3224 and the [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) by SpenceKonde.
 
+### Positive Example
 First, I looked at some results from an existing random number generator. In my case, I chose the famous random.org. I generated three sets of 10,000 random bytes:
 
 ![](extras/random.org_Frequency.jpg)
 
 The graph looks well distributed and the average standard deviation is 74.1. The height of the graph fits within 20 to 60 on the Y-axis (frequency). We will use this as a sign of having good quality random numbers.
 
+### Negative Example
 On the other end, I wanted to look at how bad random numbers look like. I generated three sets of 10,000 low quality random numbers. 
 
 The first set has
@@ -119,8 +129,9 @@ I supposed that extending the pin with a wire will make it into an antenna, and 
 ![](extras/Ranalog_Frequency_(6.5cm_Antenna).jpg)
 ![](extras/Ranalog_Frequency_(10.0cm_Antenna).jpg)
 
-6.5cm antenna got an average standard deviation of 73.9 while the 10cm antenna netted 74.1, better than having no antenna but extending the antenna seems to get diminishing returns. 
+6.5cm antenna got an average standard deviation of 73.9 while the 10cm antenna netted 74.1, better than having no antenna but extending the antenna seems to get diminishing returns.  
 
+<a name="eightantennae"></a>
 And finally, I stuck eight antenna of different length, one to each pin:
 
 ![](extras/Ranalog_Frequency_(Multi_Antennae).jpg)
@@ -180,6 +191,8 @@ Taking one random byte from each of the four methods, we can once again XOR them
 ![](extras/AlmostRandom_Frequency.jpg)
 
 The average standard deviation across three sets is 74.1, which is the same as the ones from random.org. There are no obvious spikes and dips and the frequencies lies in between 20-40, just like those from random.org.
+
+Note that for this test, the same eight-antennae setup as [mentioned above](#eightantennae) is used for Ranalog().
 
 Obviously, more research is needed to prove the quality of these random numbers, but I would say these should be good enough for most non-critical, unimportant, causal, recreational activities requiring random numbers.
 
