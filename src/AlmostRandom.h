@@ -61,6 +61,8 @@ class AlmostRandom{
 
     static char* toBin(unsigned long myLong, byte bitCount);
 
+    void getClockInfo();
+
     
   private: 
      byte random_Byte=0; // do not confused with ramdomByte
@@ -88,7 +90,7 @@ class AlmostRandom{
     byte *ramStart, *ramEnd;
 
     // Ranclock
-    byte *timerACountAddress, *timerBCountAddress;
+    byte *timerACountAddress, *timerBCountAddress, *timerAControlAddress, *timerBControlAddress;
 
 };
 

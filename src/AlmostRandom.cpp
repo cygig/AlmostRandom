@@ -79,9 +79,9 @@ AlmostRandom::AlmostRandom()
     timerACountAddress = (byte*)0x46; //8 bit Timer 0
     timerBCountAddress = (byte*)0x84; // 16 bit Timer 1
 
-    byte* timerAControlAddress = (byte*)0x45; 
-    byte* timerBControlAddress = (byte*)0x81; 
-
+    timerAControlAddress = (byte*)0x45; 
+    timerBControlAddress = (byte*)0x81; 
+  /*
     // If clock A is off (no clock), turn on with /1024 prescaling
     if ( (*timerAControlAddress & 0b00000111) == 0)
       *timerAControlAddress |= 0b00000101; 
@@ -89,15 +89,15 @@ AlmostRandom::AlmostRandom()
     // If clock A is off (no clock source), turn on with no prescaling
     if ( (*timerBControlAddress & 0b00000111) == 0)
       *timerBControlAddress |= 0b00000001; 
-
+  */
 
   #elif defined(__AVR_ATtiny3224__) || defined(__AVR_ATtiny3226__) || defined(__AVR_ATtiny3227__)
     timerACountAddress = (byte*)0xA20; // 0x0A00 + 0x20 Timer A0
     timerBCountAddress = (byte*)0xA8A; // 0x0A80 + 0x0A Timer B0
 
-    byte* timerAControlAddress = (byte*)0x0A00; 
-    byte* timerBControlAddress = (byte*)0x0A80; 
-
+    timerAControlAddress = (byte*)0x0A00; 
+    timerBControlAddress = (byte*)0x0A80; 
+    /*
     // If clock A is disabled, enable with /1024 prescaling
     if ( (*timerAControlAddress & 0b00000001) == 0)
       *timerAControlAddress |= 0b00001111; 
@@ -105,6 +105,7 @@ AlmostRandom::AlmostRandom()
     // If clock A is disabled, enable with no prescaling
     if ( (*timerBControlAddress & 0b00000001) == 0)
       *timerBControlAddress |= 0b00000001; 
+    */
 
 
   #else
@@ -192,6 +193,17 @@ char* AlmostRandom::toBin(unsigned long myLong, byte bitCount)
   
 }
   
+void AlmostRandom::getClockInfo()
+{
+  Serial.print("Clock A Control Address: ");
+  Serial.print((unsigned int)timerAControlAddress, HEX);
+  Serial.print("\t Clock A Control Value: ");
+  Serial.println(*timerAControlAddress, BIN);
 
+  Serial.print("Clock B Control Address: ");
+  Serial.print((unsigned int)timerBControlAddress, HEX);
+  Serial.print("\t Clock B Control Value: ");
+  Serial.println(*timerBControlAddress, BIN);
+}
 
 
