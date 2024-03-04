@@ -1,22 +1,18 @@
 #include "AlmostRandom.h"
 
 AlmostRandom ar;
-//byte pins[8] = {A0,A1,A2,A3,A4,A5,A0,A1};
+byte analogPin = A0;
 
 void setup()
 {
   Serial.begin(9600);
   while(Serial.available()==0){}
-
 }
 
 void loop()
 {
-  pressEnter('s', randomTest);  
+  pressEnter('s', timeTest);  
 }
-
-
-
 
 
 void pressEnter(char match, void (*myFunc)())
@@ -47,27 +43,76 @@ void pressEnter(char match, void (*myFunc)())
   
 }
 
-/*
-void getAlmostRandom()
+void getAnalogRead()
 {
   unsigned int loops = 10000;
-  ar.setRanalog (A0);
+  Serial.println("analogRead: ");
 
+  for (unsigned int i=0; i<loops; i++)
+    Serial.println(analogRead(analogPin));
+
+}
+
+
+void getRanalog()
+{
+  byte pin[]={A0, A1, A2, A3, A4, A5, A0, A1};
+  unsigned int loops = 10000;
+  ar.setRanalog(pin);
+  Serial.println("Ranalog: ");
+
+  for (unsigned int i=0; i<loops; i++)
+    Serial.println(ar.getRanalog());
+
+}
+
+void getRamdom()
+{
+  unsigned int loops = 10000;
+  Serial.println("Ramdom: ");
+
+  for (unsigned int i=0; i<loops; i++)
+    Serial.println(ar.getRamdom());
+
+}
+
+void getRanclock()
+{
+  unsigned int loops = 10000;
+  Serial.println("Ranclock: ");
+
+  for (unsigned int i=0; i<loops; i++)
+    Serial.println(ar.getRanclock());
+
+}
+
+
+
+void getRainput()
+{
+  unsigned int loops = 10000;
+  Serial.println("Rainput: ");
+
+  for (unsigned int i=0; i<loops; i++)
+    Serial.println(ar.getRainput());
+}
+
+void getAlmostRandom()
+{
+  //byte pin[]={A0, A1, A2, A3, A4, A5, A0, A1};
+  unsigned int loops = 10000;
+  ar.setRanalog(analogPin);
   Serial.println("AlmostRandom: ");
+
   for (unsigned int i=0; i<loops; i++)
     Serial.println(ar.getRandomByte());
-  Serial.println();
-
-  Serial.print("Run Code: ");
-  Serial.println(ar.getLastRunCode(), BIN);
 }
-*/
 
-
+/*
 void randomTest()
 {
   unsigned int loops = 10000;
-  ar.setRanalog (2);
+  ar.setRanalog(A0);
 
   Serial.println("Ranalog: ");
   for (unsigned int i=0; i<loops; i++)
@@ -98,6 +143,7 @@ void randomTest()
   Serial.println(ar.getLastRunCode(), BIN);
 
 }
+*/
 
 
 void timeTest()
@@ -165,6 +211,7 @@ void timeTest()
 
 
 
+/*
 void getClockInfo()
 {
   #if defined(__AVR_ATmega328P__)
@@ -234,3 +281,5 @@ void getClockInfo()
     Serial.println(MILLIS_TIMER, HEX);
   #endif
 }
+*/
+
