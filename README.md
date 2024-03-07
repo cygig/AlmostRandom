@@ -8,14 +8,14 @@ AlmostRandom serves as a compelling alternative to the built-in random() functio
 
 Please note that AlmostRandom is designed for non-critical applications and may not be suitable for tasks requiring high levels of cryptographic strength or security. However, for hobbyist projects, simulations, games, and other recreational purposes, AlmostRandom provides an excellent balance of unpredictability and ease of use.
 
-## Compatible Hardware
 
 # Contents
 - [Updates](#updates)
 - [Disclaimer](#disclaimer)
+- [Compatible Hardware](#compatible-hardware)
 - [Random Numbers](#random-numbers)
   - [Evaluating Random Numbers](#evaluating-random-numbers) 
-  - [Ranalog: Mix things up for analogRead()!](#ranalog-mix-things-up-for-analogread)
+  - [Ranalog: Mix things up for analogRead!](#ranalog-mix-things-up-for-analogread)
   - [Ramdom: Chaotic RAM](#ramdom-chaotic-ram)
   - [Ranclock: The Clock Jitters](#ranclock-the-clock-jitters)
   - [Rainput: Imprecise Humans](#rainput-imprecise-humans)
@@ -38,6 +38,18 @@ This library is meant for educational and recreational use only, do not use the 
 
 There maybe inaccurate or incomplete information regarding random numbers, like their nature, generation, usage and testing methods. I seek your forgiveness and understanding as I am not an expert in random numbers or microcontrollers.
 
+## Compatible Hardware
+This library primarily targets and is compatible with:
+| Board           | MCU        | Core             |
+|-----------------|------------|------------------|
+| Arduino Uno R3  | ATmega328P | Official Arduino |
+| Arduino Leonardo| ATmega32u4 | Official Arduino |
+| Arduino Mega    | ATmega2560 | Official Arduino |
+| My DIY Dev Board| ATtiny 3224/3226/3227 | [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) |
+
+Feel free to try
+
+
 
 # Random Numbers
 There are generally two kinds of random numbers: true random or pseudo-random. Some examples of true random sources include radioactive decay, atmospheric electrical noises and some quantum phenomena. They are not the easiest to harvest and processed into random numbers in a typical home setting.
@@ -52,6 +64,8 @@ One major problem with pseudo-random numbers is that if one knows the seed and t
 
 There are also methods that are in-between. A coin toss may seem random but if one knows all the initial conditions for the toss, they will be able to predict the outcome. However due to how unpredictable and chaotic a casual coin toss is, it is practically random for a day-to-day non-critical use case. This library aim to deliver such numbers between true and pseudo-random. 
 
+Instead of generating random numbers from one source, this library will also be using various sources of not-so-ideal random numbers, throw them into a pool of entropy to get a better random number. 
+
 
 
 ## Evaluating Random Numbers
@@ -63,7 +77,6 @@ Standard deviation measures the variation of a reading about its mean average, w
 
 I assume that the fairest random number generator will generated all possible values with equal chances as the number of readings approach infinity.
 
-In all the test, I used the ATtiny3224 and the [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) by SpenceKonde.
 
 ### Positive Example
 First, I looked at some results from an existing random number generator. In my case, I chose the famous random.org. I generated three sets of 10,000 random bytes:
@@ -84,7 +97,7 @@ The first set has
 
 The second set has a 1,000 preset/random numbers in similar fashion as the first.
 
-The third set as 1,000 preset numbers looping til the end of 10,000 total numbers with no random numbers.
+The third set as 1,000 preset numbers looping till the end of 10,000 total numbers with no random numbers.
 
 ![](extras/Looping_Pattern_Frequency.jpg)
 
@@ -95,48 +108,53 @@ Set 2 is the least obvious among the three, thanks to the repeating preset being
 I noted that the standard deviation does not tell us too much as the good random numbers from random.org netted us 74.1 while the horrible Set 1 and Set 3 is 76.4 and 74.7 respectively, not far away. I suspected a value too unreasonable will indicate larger issues with the quality of random numbers.
 
 Lastly, this is the result from using the built-in `random()` in Arduino:
+![](extras/Arduino_random_Function_Frequency_(Different_Boards_Same_Seed).jpg)
 
 
 
-
-## Ranalog: Mix things up for analogRead()!
-The reading from analogRead() has been a staple to use as a seed for the Arduino built-in random number generator. It usually goes like this:
+## Ranalog: Mix things up for analogRead!
+The reading from analogRead has been a staple to use as a seed for the Arduino built-in random number generator. It usually goes like this:
 ```
 randomSeed( analogRead(A0) );
 long randNumber = random(10, 10000);
 Serial.println(randNumber);
 ```
-The idea is a floating (unconnected) pin will measure surround electromagnetic interference (EMI) to produce a random reading. However, calling `analogRead()` 10,000 times and plotting the readings seems to tell a different story:
+The idea is a floating (unconnected) pin will measure surround electromagnetic interference (EMI) to produce a random reading. However, calling `analogRead()` on the ATtint3224 10,000 times and plotting the readings seems to tell a different story:
 
-![image](extras/analogRead_Frequency_(No_Antenna).jpg)
+![](extras/ATtiny3224_analogRead_Frequency_(No_Antenna).jpg)
 
 It seems like less than half of the possible values from 0 to 1023 were produced at least once, and there is a discernible 'U' shape with spikes at the end. This may not even make for a good seed. The standard deviations are more than 100, making it worse than the poor quality random numbers I designed in [Evaluating Random Numbers](#evaluating-random-numbers).
 
 Out of curiosity, I decided to look at the parity of the readings. It means seeing how many of the readings are odd and how many are even:
 
-![](extras/analogRead_Parity_(No_Antenna).jpg)
+![](extras/ATtiny3224_analogRead_Parity_(No_Antenna).jpg)
 
-Throughout three sets of 10,000 readings, the ratios of odd to even number come close to 50:50. This effectively makes the parity of `analogRead()` a coin toss. A bit can be a one or zero, so if the microcontroller unit (MCU) "toss" this coin eight times, it would be able to produce one random byte (eight bits in one byte).
+Throughout three sets of 10,000 readings, the ratios of odd to even number come close to 50:50. This effectively makes the parity of `analogRead()` on the ATtiny3224 a coin toss. A bit can be a one or zero, so if the microcontroller unit (MCU) "toss" this coin eight times, it would be able to produce one random byte (eight bits in one byte). I dub this the "Ranalog" method.
 
-I dub this the "Ranalog" method and this is how the distribution looks like:
+I then repeat the analogRead experiment with the Arduino Uno R3 and Arduino Leonardo:
 
-![](extras/Ranalog_Frequency_(No_Antenna).jpg)
+|                    | Arduino Uno R3 | Arduino Leonardo |
+|--------------------|----------------|------------------|
+|analogRead Frequency| ![](extras/Arduino_Uno_R3_analogRead_Frequency_(No_Antenna).jpg) | ![](extras/Arduino_Leonardo_analogRead_Frequency_(No_Antenna).jpg) |
+|Parity Distribution | ![](extras/Arduino_Uno_R3_analogRead_Parity_(No_Antenna).jpg) | ![](extras/Arduino_Leonardo_analogRead_Parity_(No_Antenna).jpg) |
 
-Other than some slight spikes here and there, the distribution looks decent with an average standard deviation of 75.4 across the sets. 
+Those look worse than those from the ATtiny3224 and there are way too many odd numbers and zeros for the case of Uno. Regardless, my aim is to combine various sources of not-so-ideal random numbers, hence I implemented the Ranalog to take a look:
 
-I supposed that extending the pin with a wire will make it into an antenna, and hopefully this antenna will be able to pick up EMI more randomly, as such, I attached a 6.5 and 10.0cm antenna via a breadboard:
+| ATtiny3224 | Arduino Uno R3 | Arduino Leonardo |
+|------------|----------------|------------------| 
+| ![](extras/ATtiny3224_Ranalog_Frequency_(No_Antenna).jpg) | ![](extras/Arduino_Uno_R3_Ranalog_Frequency_(No_Antenna).jpg) | ![](extras/Arduino_Uno_R3_analogRead_Frequency_(No_Antenna).jpg) |
 
-![](extras/Ranalog_Frequency_(6.5cm_Antenna).jpg)
-![](extras/Ranalog_Frequency_(10.0cm_Antenna).jpg)
+ATtiny3224 has the best results, while surprisingly Leonardo has the worst, despite poorer looking distribution from Uno R3's analogRead function.
 
-6.5cm antenna got an average standard deviation of 73.9 while the 10cm antenna netted 74.1, better than having no antenna but extending the antenna seems to get diminishing returns.  
+I supposed that extending the pin with a wire will make it into an antenna, and hopefully this antenna will be able to pick up EMI more randomly, as such, I attached a 6.5, 10.0cm antenna and via a breadboard. Since we can get each bit of the byte from an analog pin, I also tested out multiple antennae on as many analog in port as the developer's board allow:
 
-<a name="eightantennae"></a>
-And finally, I stuck eight antenna of different length, one to each pin:
+| Antenna(e) | ATtiny3224 | Arduino Uno R3 | Arduino Leonardo |
+|------------|------------|----------------|------------------|
+| 6.5cm      | ![](extras/ATtiny3224_Ranalog_Frequency_(6.5cm_Antenna).jpg) | ![](extras/Arduino_Uno_R3_Ranalog_Frequency_(6.5cm_Antenna).jpg) | ![](extras/Arduino_Leonardo_Ranalog_Frequency_(6.5cm_Antenna).jpg) |
+| 10.0cm     | 
+| Multi      |
 
-![](extras/Ranalog_Frequency_(Multi_Antennae).jpg)
 
-This one has an average standard deviation of 73.1, beating the rest, but I also used 8 different pins, which may be too much for a MCU.
 
 
 ## Ramdom: Chaotic RAM
