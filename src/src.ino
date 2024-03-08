@@ -7,6 +7,7 @@ void setup()
 {
   Serial.begin(9600);
   while(Serial.available()==0){}
+  Serial.println("Begin!");
 }
 
 void loop()
@@ -76,7 +77,8 @@ void getRanalog()
 
 void getRamdom()
 {
-  ar.setRamdom((byte*)0x40370000, (byte*)0x403DFFFF);
+  ar.setRamdom((byte*)0x3FC88000, (byte*)0x3FCFFFFF);
+  ar.enableRamdom(true);
   unsigned int loops = 10000;
   Serial.println("Ramdom: ");
 
