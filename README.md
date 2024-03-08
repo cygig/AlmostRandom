@@ -38,7 +38,7 @@ This library is meant for educational and recreational use only, do not use the 
 
 There maybe inaccurate or incomplete information regarding random numbers, like their nature, generation, usage and testing methods. I seek your forgiveness and understanding as I am not an expert in random numbers or microcontrollers.
 
-## Compatible Hardware
+# Compatible Hardware
 This library primarily targets and is compatible with:
 | Board           | MCU        | Core             |
 |-----------------|------------|------------------|

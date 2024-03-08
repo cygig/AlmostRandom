@@ -11,7 +11,7 @@ void setup()
 
 void loop()
 {
-  pressEnter('s', timeTest);  
+  pressEnter('s', getRamdom);  
 }
 
 
@@ -43,6 +43,14 @@ void pressEnter(char match, void (*myFunc)())
   
 }
 
+void getAnalogCheck()
+{
+
+  byte pin[]={15, 16, 17, 18, 15, 16, 17, 18};
+  ar.setRanalog(pin);
+
+}
+
 void getAnalogRead()
 {
   unsigned int loops = 10000;
@@ -68,6 +76,7 @@ void getRanalog()
 
 void getRamdom()
 {
+  ar.setRamdom((byte*)0x40370000, (byte*)0x403DFFFF);
   unsigned int loops = 10000;
   Serial.println("Ramdom: ");
 
@@ -108,11 +117,11 @@ void getAlmostRandom()
     Serial.println(ar.getRandomByte());
 }
 
-/*
+
 void randomTest()
 {
   unsigned int loops = 10000;
-  ar.setRanalog(A0);
+  ar.setRanalog(analogPin);
 
   Serial.println("Ranalog: ");
   for (unsigned int i=0; i<loops; i++)
@@ -143,7 +152,7 @@ void randomTest()
   Serial.println(ar.getLastRunCode(), BIN);
 
 }
-*/
+
 
 
 void timeTest()

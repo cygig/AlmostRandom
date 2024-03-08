@@ -75,7 +75,7 @@ AlmostRandom::AlmostRandom()
   #else
     // Else we have no idea and users should set the address manually so we disable ranclock first
     timerACountAddress = (byte*)0x0;
-    timerBCountAddressB = (byte*)0x0;
+    timerBCountAddress = (byte*)0x0;
     flags.enableRanclock = false;
   #endif
 
