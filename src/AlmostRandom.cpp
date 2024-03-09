@@ -47,6 +47,10 @@ AlmostRandom::AlmostRandom()
     // 3072 bytes
     ramStart = (byte*)0x3400;
     ramEnd = (byte*)0x3FFF;
+  
+  #elif defined(CONFIG_IDF_TARGET_ESP32S3)
+     ramStart = (byte*)0x3FC88000;
+     ramEnd = (byte*)0x3FCFFFFF;   
 
   #elif defined(RAMSTART) && defined(RAMEND)
     // If none of the above MCU, check if RAMSTART and RAMEND are already defined. Typecast for safety.
@@ -71,6 +75,14 @@ AlmostRandom::AlmostRandom()
   #elif defined(__AVR_ATtiny3224__) || defined(__AVR_ATtiny3226__) || defined(__AVR_ATtiny3227__)
     timerACountAddress = (byte*)0xA20; // 0x0A00 + 0x20 Timer A0
     timerBCountAddress = (byte*)0xA9A; // 0x0A90 + 0x0A Timer B1
+
+  #elif defined(CONFIG_IDF_TARGET_ESP32S3)
+    // These are supposed to be 32bits, but we just need the last 8 bits for the count and 
+    // any value works to activate the latch.
+    timerACountAddress = (byte*)0x6001F004; // Group 0 Timer 0 Lowest Byte
+    timerBCountAddress = (byte*)0x60020004; // Group 1 Timer 0 Lowest Byte
+    timerALatchAddress = (byte*)0x6001F00C; // Group 0 Timer 0 Update Address
+    timerBLatchAddress = (byte*)0x6002000C; // Group 1 Timer 0 Update Address
 
   #else
     // Else we have no idea and users should set the address manually so we disable ranclock first

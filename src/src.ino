@@ -8,11 +8,16 @@ void setup()
   Serial.begin(9600);
   while(Serial.available()==0){}
   Serial.println("Begin!");
+
+  uint32_t* G0T0_CTRL = (uint32_t*)0x6001F000;
+  uint32_t* G1T0_CTRL = (uint32_t*)0x60020000;
+  *G0T0_CTRL |= (1<<31);
+  *G1T0_CTRL |= (1<<31);
 }
 
 void loop()
 {
-  pressEnter('s', getRamdom);  
+  pressEnter('s', getRanclock);  
 }
 
 
@@ -89,7 +94,7 @@ void getRamdom()
 
 void getRanclock()
 {
-  unsigned int loops = 10000;
+  unsigned int loops = 5;
   Serial.println("Ranclock: ");
 
   for (unsigned int i=0; i<loops; i++)
@@ -233,6 +238,8 @@ void getClockInfo()
     Serial.println("ATmega2560");
   #elif defined(__AVR_ATtiny3224__)
     Serial.println("ATtiny3224");
+  #elif defined(CONFIG_IDF_TARGET_ESP32S3)
+    Serial.println("ESP32S3");
   #endif
 
   #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__) || (__AVR_ATmega2560__)
@@ -290,7 +297,81 @@ void getClockInfo()
 
     Serial.print("Millis Timer: ");
     Serial.println(MILLIS_TIMER, HEX);
+
+  #elif defined (CONFIG_IDF_TARGET_ESP32S3)
+
+    uint32_t* G0T0_CTRL = (uint32_t*)0x6001F000;
+    uint32_t* G0T0_LO = (uint32_t*)0x6001F004;
+    uint32_t* G0T0_HI = (uint32_t*)0x6001F008;
+    uint32_t* G0T0_UPDATE = (uint32_t*)0x6001F00C;
+
+    uint32_t* G0T1_CTRL = (uint32_t*)0x6001F024;
+    uint32_t* G0T1_LO = (uint32_t*)0x6001F028;
+    uint32_t* G0T1_HI = (uint32_t*)0x6001F02C;
+    uint32_t* G0T1_UPDATE = (uint32_t*)0x6001F030;
+
+    uint32_t* G1T0_CTRL = (uint32_t*)0x60020000;
+    uint32_t* G1T0_LO = (uint32_t*)0x60020004;
+    uint32_t* G1T0_HI = (uint32_t*)0x60020008;
+    uint32_t* G1T0_UPDATE = (uint32_t*)0x6002000C;
+
+    uint32_t* G1T1_CTRL = (uint32_t*)0x60020024;
+    uint32_t* G1T1_LO = (uint32_t*)0x60020028;
+    uint32_t* G1T1_HI = (uint32_t*)0x6002002C;
+    uint32_t* G1T1_UPDATE = (uint32_t*)0x60020030;
+
+    
+    Serial.print("Timer G0 T0 Control: ");
+    Serial.println(*G0T0_CTRL, BIN);
+    *G0T0_CTRL |= (1<<31);
+    //*G0T0_UPDATE = (1<<31);
+    Serial.print("Latch: ");
+    Serial.print(*G0T0_UPDATE, BIN);
+    Serial.print("\tCount: ");
+    Serial.print(*G0T0_HI, BIN);
+    Serial.print(" ");
+    Serial.println(*G0T0_LO, BIN);
+
+    
+    Serial.print("Timer G0 T1 Control: ");
+    Serial.println(*G0T1_CTRL, BIN);
+    *G0T1_CTRL |= (1<<31);
+    //*G0T1_UPDATE = (1<<31);
+    Serial.print("Latch: ");
+    Serial.print(*G0T1_UPDATE, BIN);
+    Serial.print("\tCount: ");
+    Serial.print(*G0T1_HI, BIN);
+    Serial.print(" ");
+    Serial.println(*G0T1_LO, BIN);
+
+    
+    
+    Serial.print("Timer G1 T0 Control: ");
+    Serial.println(*G1T0_CTRL, BIN);
+    *G1T0_CTRL |= (1<<31);
+    //*G1T0_UPDATE = (1<<31);
+    Serial.print("Latch: ");
+    Serial.print(*G1T0_UPDATE, BIN);
+    Serial.print("\tCount: ");
+    Serial.print(*G1T0_HI, BIN);
+    Serial.print(" ");
+    Serial.println(*G1T0_LO, BIN);
+
+    
+    Serial.print("Timer G1 T1 Control: ");
+    Serial.println(*G1T1_CTRL, BIN);
+    *G1T1_CTRL |= (1<<31);
+    //*G1T1_UPDATE = (1<<31);
+    Serial.print("Latch: ");
+    Serial.print(*G1T1_UPDATE, BIN);
+    Serial.print("\tCount: ");
+    Serial.print(*G1T1_HI, BIN);
+    Serial.print(" ");
+    Serial.println(*G1T1_LO, BIN);
+
+    Serial.println("----------");
   #endif
 }
 */
+
 

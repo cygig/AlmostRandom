@@ -25,9 +25,6 @@ void AlmostRandom::setRanalog(byte myAnalogPins[byteSize])
 {
   for (byte i=0; i<byteSize; i++){
     analogPins[i]=myAnalogPins[i]; 
-    // Serial.print(analogPins[i]);
-    // Serial.print(": ");
-    // Serial.println(analogRead(analogPins[i]));
     }
 }
 

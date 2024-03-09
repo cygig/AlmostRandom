@@ -53,6 +53,9 @@ class AlmostRandom{
     void setRanclock(byte* myTimerACountAddress, byte* myTimerBCountAddress);
     byte getRanclock();
     byte getLastRanclock();
+    #if defined(CONFIG_IDF_TARGET_ESP32S3)
+      void setLatch(byte* myTimerALatchAddress, byte* myTimerBLatchAddress);
+    #endif
 
     void enableRainput(bool myEnable);
     bool isEnabledRainput();
@@ -90,6 +93,9 @@ class AlmostRandom{
 
     // Ranclock
     byte *timerACountAddress, *timerBCountAddress;
+    #if defined(CONFIG_IDF_TARGET_ESP32S3)
+      byte *timerALatchAddress, *timerBLatchAddress;
+    #endif
 
 };
 
