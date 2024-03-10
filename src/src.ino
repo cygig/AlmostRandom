@@ -1,7 +1,7 @@
 #include "AlmostRandom.h"
 
 AlmostRandom ar;
-byte analogPin = A0;
+byte analogPin = 14;
 
 void setup()
 {
@@ -11,13 +11,15 @@ void setup()
 
   uint32_t* G0T0_CTRL = (uint32_t*)0x6001F000;
   uint32_t* G1T0_CTRL = (uint32_t*)0x60020000;
+
   *G0T0_CTRL |= (1<<31);
   *G1T0_CTRL |= (1<<31);
+
 }
 
 void loop()
 {
-  pressEnter('s', getRanclock);  
+  pressEnter('s', randomTest);  
 }
 
 
@@ -47,6 +49,13 @@ void pressEnter(char match, void (*myFunc)())
     while (Serial.available()>0) Serial.read();
   }
   
+}
+
+void getTimerESP()
+{
+  *(uint32_t*)0x6001F00C = 1;
+  Serial.println(*(uint32_t*)0x6001F00C, BIN);
+  Serial.println(*(uint8_t* )0x6001F004, BIN);
 }
 
 void getAnalogCheck()
@@ -82,8 +91,8 @@ void getRanalog()
 
 void getRamdom()
 {
-  ar.setRamdom((byte*)0x3FC88000, (byte*)0x3FCFFFFF);
-  ar.enableRamdom(true);
+  //ar.setRamdom((byte*)0x3FC88000, (byte*)0x3FCFFFFF);
+  //ar.enableRamdom(true);
   unsigned int loops = 10000;
   Serial.println("Ramdom: ");
 
@@ -94,7 +103,7 @@ void getRamdom()
 
 void getRanclock()
 {
-  unsigned int loops = 5;
+  unsigned int loops = 10000;
   Serial.println("Ranclock: ");
 
   for (unsigned int i=0; i<loops; i++)

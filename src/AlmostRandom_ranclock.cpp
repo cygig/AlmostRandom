@@ -1,3 +1,4 @@
+#include "Arduino.h"
 #include "AlmostRandom.h"
 
 void AlmostRandom::enableRanclock(bool myEnable)
@@ -14,19 +15,27 @@ bool AlmostRandom::isEnabledRanclock()
 
 
 
-void AlmostRandom::setRanclock(byte* myTimerACountAddress, byte* myTimerBCountAddress)
-{
-  timerACountAddress = myTimerACountAddress;
-  timerBCountAddress = myTimerBCountAddress;
-}
+
 
 
 
 #if defined(CONFIG_IDF_TARGET_ESP32S3)
-  void AlmostRandom::setLatch(byte* myTimerALatchAddress, byte* myTimerBLatchAddress)
+  void AlmostRandom::setLatch(uint32_t* myTimerALatchAddress, uint32_t* myTimerBLatchAddress)
   {
     timerALatchAddress = myTimerALatchAddress;
     timerBLatchAddress = myTimerBLatchAddress;
+  }
+
+  void AlmostRandom::setRanclock(uint32_t* myTimerACountAddress, uint32_t* myTimerBCountAddress)
+  {
+    timerACountAddress = myTimerACountAddress;
+    timerBCountAddress = myTimerBCountAddress;
+  }
+#else
+  void AlmostRandom::setRanclock(byte* myTimerACountAddress, byte* myTimerBCountAddress)
+  {
+    timerACountAddress = myTimerACountAddress;
+    timerBCountAddress = myTimerBCountAddress;
   }
 #endif
 
@@ -43,11 +52,8 @@ byte AlmostRandom::getRanclock()
   #endif 
 
   byte result=0;
-  unsigned int timerACount = *timerACountAddress;
-  unsigned int timerBCount = *timerBCountAddress;
-
-  Serial.println(timerACount);
-  Serial.println(timerBCount);
+  byte timerACount = *timerACountAddress;
+  byte timerBCount = *timerBCountAddress;
   
   result = timerACount ^ timerBCount;
 

@@ -77,12 +77,11 @@ AlmostRandom::AlmostRandom()
     timerBCountAddress = (byte*)0xA9A; // 0x0A90 + 0x0A Timer B1
 
   #elif defined(CONFIG_IDF_TARGET_ESP32S3)
-    // These are supposed to be 32bits, but we just need the last 8 bits for the count and 
-    // any value works to activate the latch.
-    timerACountAddress = (byte*)0x6001F004; // Group 0 Timer 0 Lowest Byte
-    timerBCountAddress = (byte*)0x60020004; // Group 1 Timer 0 Lowest Byte
-    timerALatchAddress = (byte*)0x6001F00C; // Group 0 Timer 0 Update Address
-    timerBLatchAddress = (byte*)0x6002000C; // Group 1 Timer 0 Update Address
+    // We need a latch for ESP32S2 to update the values into a 32-bit register
+    timerACountAddress = (uint32_t*)0x6001F004; // Group 0 Timer 0 Lowest Byte
+    timerBCountAddress = (uint32_t*)0x60020004; // Group 1 Timer 0 Lowest Byte
+    timerALatchAddress = (uint32_t*)0x6001F00C; // Group 0 Timer 0 Update Address
+    timerBLatchAddress = (uint32_t*)0x6002000C; // Group 1 Timer 0 Update Address
 
   #else
     // Else we have no idea and users should set the address manually so we disable ranclock first

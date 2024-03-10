@@ -50,12 +50,16 @@ class AlmostRandom{
 
     void enableRanclock(bool myEnable);
     bool isEnabledRanclock();
-    void setRanclock(byte* myTimerACountAddress, byte* myTimerBCountAddress);
+    #if defined(CONFIG_IDF_TARGET_ESP32S3)
+      void setRanclock(uint32_t* myTimerACountAddress, uint32_t* myTimerBCountAddress);
+      void setLatch(uint32_t* myTimerALatchAddress, uint32_t* myTimerBLatchAddress);
+    #else
+      void setRanclock(byte* myTimerACountAddress, byte* myTimerBCountAddress);
+    #endif
+    
     byte getRanclock();
     byte getLastRanclock();
-    #if defined(CONFIG_IDF_TARGET_ESP32S3)
-      void setLatch(byte* myTimerALatchAddress, byte* myTimerBLatchAddress);
-    #endif
+
 
     void enableRainput(bool myEnable);
     bool isEnabledRainput();
@@ -92,9 +96,12 @@ class AlmostRandom{
     byte *ramStart, *ramEnd;
 
     // Ranclock
-    byte *timerACountAddress, *timerBCountAddress;
     #if defined(CONFIG_IDF_TARGET_ESP32S3)
-      byte *timerALatchAddress, *timerBLatchAddress;
+      // Seems like I can only read the esp32s3 registers using a 32bit pointer
+      uint32_t *timerALatchAddress, *timerBLatchAddress;
+      uint32_t *timerACountAddress, *timerBCountAddress;
+    #else
+      byte *timerACountAddress, *timerBCountAddress;  
     #endif
 
 };
