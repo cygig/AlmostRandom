@@ -167,6 +167,18 @@ char* AlmostRandom::toBin(unsigned long myLong, byte bitCount)
   return result;
   
 }
-  
 
-
+void AlmostRandom::byteInsertionSort(byte arr[], unsigned int size) {
+    for (unsigned int i = 1; i < size; i++) {
+        byte key = arr[i];
+        int j = i - 1;
+        
+        // Move elements of arr[0..i-1], that are greater than key, to one position ahead
+        // of their current position
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}

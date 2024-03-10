@@ -12,7 +12,6 @@ AlmostRandom by cygig
 #endif
 
 
-
 class AlmostRandom{
 
   public:
@@ -67,6 +66,7 @@ class AlmostRandom{
     byte getLastRainput();
 
     static char* toBin(unsigned long myLong, byte bitCount);
+    static void byteInsertionSort(byte arr[], unsigned int size);
 
 
     
@@ -101,6 +101,7 @@ class AlmostRandom{
       uint32_t *timerALatchAddress, *timerBLatchAddress;
       uint32_t *timerACountAddress, *timerBCountAddress;
     #else
+      // These are for the default 8-bit registers
       byte *timerACountAddress, *timerBCountAddress;  
     #endif
 
