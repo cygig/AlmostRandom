@@ -23,9 +23,7 @@ void AlmostRandom::setRanalog(byte myAnalogPin)
 
 void AlmostRandom::setRanalog(byte myAnalogPins[byteSize])
 {
-  for (byte i=0; i<byteSize; i++){
-    analogPins[i]=myAnalogPins[i]; 
-    }
+  for (byte i=0; i<byteSize; i++) { analogPins[i]=myAnalogPins[i]; }
 }
 
 

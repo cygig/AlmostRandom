@@ -66,7 +66,6 @@ class AlmostRandom{
     byte getLastRainput();
 
     static char* toBin(unsigned long myLong, byte bitCount);
-    static void byteInsertionSort(byte arr[], unsigned int size);
 
 
     

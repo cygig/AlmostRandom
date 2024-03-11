@@ -92,6 +92,8 @@ AlmostRandom::AlmostRandom()
 
 }
 
+
+
 byte AlmostRandom::getRandomByte()
 {
   byte result = 0;
@@ -127,9 +129,63 @@ byte AlmostRandom::getRandomByte()
 
 }
 
+
+
 byte AlmostRandom::getLastRunCode()
 {
   return flags.runCode;
+}
+
+
+
+int16_t AlmostRandom::getRandomInt()
+{
+  return (int16_t)getRandomUInt();
+}
+
+
+
+uint16_t AlmostRandom::getRandomUInt()
+{
+  uint16_t result=(uint16_t) getRandomByte();
+  result <<= byteSize;
+  result |= getRandomByte();
+
+  return result;
+}
+
+
+
+int32_t AlmostRandom::getRandomLong()
+{
+  return (int32_t)getRandomULong();
+}
+
+
+
+uint32_t AlmostRandom::getRandomULong()
+{
+  const byte byteCount=4;
+  uint32_t result=(uint32_t)getRandomByte();
+  
+  for (byte i=0; i<byteCount-1; i++)
+  {
+    result <<= byteSize;
+    result |= getRandomByte();
+  }
+
+  return result;
+}
+
+
+
+float AlmostRandom::getRandomFloat()
+{
+  long a=getRandomLong();
+  long b=getRandomLong();
+
+  return (float)a/(float)b;
+
 }
 
 
@@ -168,17 +224,3 @@ char* AlmostRandom::toBin(unsigned long myLong, byte bitCount)
   
 }
 
-void AlmostRandom::byteInsertionSort(byte arr[], unsigned int size) {
-    for (unsigned int i = 1; i < size; i++) {
-        byte key = arr[i];
-        int j = i - 1;
-        
-        // Move elements of arr[0..i-1], that are greater than key, to one position ahead
-        // of their current position
-        while (j >= 0 && arr[j] > key) {
-            arr[j + 1] = arr[j];
-            j = j - 1;
-        }
-        arr[j + 1] = key;
-    }
-}
