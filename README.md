@@ -40,16 +40,28 @@ There maybe inaccurate or incomplete information regarding random numbers, like 
 
 # Compatible Hardware
 This library primarily targets and is compatible with:
-| Board           | MCU        | Core             |
-|-----------------|------------|------------------|
-| Arduino Uno R3  | ATmega328P | Official Arduino |
-| Arduino Leonardo| ATmega32u4 | Official Arduino |
-| Arduino Mega    | ATmega2560 | Official Arduino |
-| My DIY Dev Board| ATtiny 3224/3226/3227 | [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) |
+| Board            | MCU        | Core             | Default `ramStart` | Default `ramEnd` | Default `timerA`<br>`CountAddress` | Default `timerB`<br>`CountAddress` |
+|------------------|------------|------------------|-|-|-|-|
+| Arduino Uno R3   | ATmega328P | Official Arduino | 0x0100 | 0x08FF | 0x46 (Timer 0) | 0x84 (Timer 1) | 
+| Arduino Leonardo | ATmega32u4 | Official Arduino | 0x0100 | 0x0AFF | 0x46 (Timer 0) | 0x84 (Timer 1) | 
+| Arduino Mega     | ATmega2560 | Official Arduino | 0x0200 | 0x21FF | 0x46 (Timer 0) | 0x84 (Timer 1) | 
+| My DIY Dev Board | ATtiny 3224/3226/3227 | [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) | 0x3400 | 0x3FFF | 0x0A20 (Timer A0) | 0x0A9A (Timer B1)
+| ESP32-S3-DevKitC* | ESP32S3    | Official Arduino | 0x3FC88000 | 0x3FCFFFFF | 0x6001F004 (Group 0 Timer 0, latch on 0x6001F00C) | 0x60020004 (Group 1 Timer 0, latch on 0x6002000C) |
 
-Feel free to try
+Feel free to try other MCUs and let me know if they work.
 
+*ESP32S3, while supported, is not recommended as it has its own dedicated random number generator, which is probably a lot faster and a lot more random than my library. Those two default timers seemed not to be in used, and thus you have to turn them on manually using:
+```
+uint32_t* G0T0_CTRL = (uint32_t*)0x6001F000;
+uint32_t* G1T0_CTRL = (uint32_t*)0x60020000;
 
+*G0T0_CTRL |= (1<<31);
+*G1T0_CTRL |= (1<<31);
+```
+
+This should be done in `setup()`. Feel free to play around with the prescalers should you wish to.
+
+<br>
 
 # Random Numbers
 There are generally two kinds of random numbers: true random or pseudo-random. Some examples of true random sources include radioactive decay, atmospheric electrical noises and some quantum phenomena. They are not the easiest to harvest and processed into random numbers in a typical home setting.
@@ -73,7 +85,7 @@ Evaluating the quality of random numbers is a subject require vast mathematical 
 
 The frequency graph shows how often a number is being generated, which gives us a clue on how each possible value (0-255, one byte, in our case) is being represented. Spikes will mean that value is over represented while dip means under represented.
 
-Standard deviation measures the variation of a reading about its mean average, with lower number suggesting a smaller spread or better consistency.
+Standard deviation measures the variation of a reading about its mean average, with lower number suggesting a smaller spread or better consistency. 
 
 I assume that the fairest random number generator will generated all possible values with equal chances as the number of readings approach infinity.
 
@@ -109,7 +121,9 @@ I noted that the standard deviation does not tell us too much as the good random
 
 Lastly, this is the result from using the built-in `random()` in Arduino:
 ![](extras/Arduino_random_Function_Frequency_(Different_Boards_Same_Seed).jpg)
+![](extras/Arduino_random_Function_Frequency_(Same_Board_Different_Seeds).jpg)
 
+As expected, the same seed yields the same result over three different boards. To be fair, the quality of the random numbers appear to be decent, except for the fact they are very predictable. d
 
 
 ## Ranalog: Mix things up for analogRead!
@@ -151,14 +165,20 @@ I supposed that extending the pin with a wire will make it into an antenna, and 
 | Antenna(e) | ATtiny3224 | Arduino Uno R3 | Arduino Leonardo |
 |------------|------------|----------------|------------------|
 | 6.5cm      | ![](extras/ATtiny3224_Ranalog_Frequency_(6.5cm_Antenna).jpg) | ![](extras/Arduino_Uno_R3_Ranalog_Frequency_(6.5cm_Antenna).jpg) | ![](extras/Arduino_Leonardo_Ranalog_Frequency_(6.5cm_Antenna).jpg) |
-| 10.0cm     | 
-| Multi      |
+| 10.0cm     | ![](extras/ATtiny_3224_Ranalog_Frequency_(10.0cm_Antenna).jpg) | ![](extras/Arduino_Uno_R3_Ranalog_Frequency_(10.0cm_Antenna).jpg) | ![](extras/Arduino_Leonardo_Ranalog_Frequency_(10.0cm_Antenna).jpg) |
+| Multi      | ![](extras/ATtiny3224__Ranalog_Frequency_(Multi_Antennae).jpg) | ![](extras/Arduino_Uno_R3_Ranalog_Frequency_(Multi_Antennae).jpg) | ![](extras/Arduino_Leonardo_Ranalog_Frequency_(Multi_Antennae).jpg) |
 
+The ATtiny3224 starts off with a good distribution but did not seem to get much better with longer or more antenna, which I suspect was due to poor grounding on my DIY development board, since the board is pretty small after all. 
 
+The Uno starts off pretty badly but gets better with longer and more antennae. 
+
+Meanwhile the Leonardo seems put put poor random numbers with too many zeros across the board, with little improvement when the there are longer and more antennae, which might suggest good grounding and shielding.
 
 
 ## Ramdom: Chaotic RAM
-Uninitialised random access memory (RAM) are not guaranteed to be zeros. And there doesn't seem to be any code that will zero the RAM other than where it will be used. On the internet, there are some criticism of using uninitalised RAM for random numbers, mainly:
+Uninitialised random access memory (RAM) are supposedly not guaranteed to be zeros. Also, Arduino does not seem to zero its RAM, other than the parts are are going to be used (not sure about that on the ESP32S3). Therefore RAM contents can be a source for random numbers.
+
+On the internet, there are some criticism of using uninitalised RAM for random numbers, mainly:
 - Uninitialised RAM are not that random and can produce looping sequences
 - It is unsafe to meddle with uninitialised RAM
 
