@@ -45,11 +45,12 @@ This library primarily targets and is compatible with:
 | Arduino Uno R3   | ATmega328P | Official Arduino | 0x0100 | 0x08FF | 0x46 (Timer 0) | 0x84 (Timer 1) | 
 | Arduino Leonardo | ATmega32u4 | Official Arduino | 0x0100 | 0x0AFF | 0x46 (Timer 0) | 0x84 (Timer 1) | 
 | Arduino Mega     | ATmega2560 | Official Arduino | 0x0200 | 0x21FF | 0x46 (Timer 0) | 0x84 (Timer 1) | 
-| My DIY Dev Board | ATtiny 3224/3226/3227 | [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) | 0x3400 | 0x3FFF | 0x0A20 (Timer A0) | 0x0A9A (Timer B1)
+| My DIY Dev Board | ATtiny 3224/<br>3226/3227 | [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) | 0x3400 | 0x3FFF | 0x0A20 (Timer A0) | 0x0A9A (Timer B1)
 | ESP32-S3-DevKitC* | ESP32S3    | Official Arduino | 0x3FC88000 | 0x3FCFFFFF | 0x6001F004 (Group 0 Timer 0, latch on 0x6001F00C) | 0x60020004 (Group 1 Timer 0, latch on 0x6002000C) |
 
 Feel free to try other MCUs and let me know if they work.
 
+<a id="esp32s3timer"></a>
 *ESP32S3, while supported, is not recommended as it has its own dedicated random number generator, which is probably a lot faster and a lot more random than my library. Those two default timers seemed not to be in used, and thus you have to turn them on manually using:
 ```
 uint32_t* G0T0_CTRL = (uint32_t*)0x6001F000;
@@ -60,6 +61,8 @@ uint32_t* G1T0_CTRL = (uint32_t*)0x60020000;
 ```
 
 This should be done in `setup()`. Feel free to play around with the prescalers should you wish to.
+
+## Default values
 
 <br>
 
@@ -176,38 +179,31 @@ Meanwhile the Leonardo seems put put poor random numbers with too many zeros acr
 
 
 ## Ramdom: Chaotic RAM
-Uninitialised random access memory (RAM) are supposedly not guaranteed to be zeros. Also, Arduino does not seem to zero its RAM, other than the parts are are going to be used (not sure about that on the ESP32S3). Therefore RAM contents can be a source for random numbers.
+Supposedly, uninitialised random access memory (RAM) are not guaranteed to be all zeros or all ones, and an Ardunino does not seem to initialise its RAM other than those that are being use actively (Not sure for the ESP32S3 though). Also, the values of the RAM are also constantly changing as the program is running. Hence, it is possible to use RAM values as a random source.
 
-On the internet, there are some criticism of using uninitalised RAM for random numbers, mainly:
+On the internet, there are some criticism of using uninitialised RAM for random numbers, mainly:
 - Uninitialised RAM are not that random and can produce looping sequences
 - It is unsafe to meddle with uninitialised RAM
 
-Regardless, I dubbed this method "Ramdom" and read the entire RAM of my ATTiny3224, XORing each byte. As the program is running, parts of the RAM that are actively in used will also contribute to the random numbers. This is what I get:
+I dubbed this method "Ramdom" and get to read the contents of RAM in bytes, and XOR-ing every one of them:
 
-![](extras/Ramdom_Frequency.jpg)
+| ATtiny3224 | Arduino Uno R3 | Arduino Leonardo |
+|------------|----------------|------------------|
+| ![](extras/ATtiny3224_Ramdom_Frequency.jpg) | ![](extras/Arduino_Uno_R3_Ramdom_Frequency.jpg) | ![](extras/Arduino_Leonardo_Ramdom_Frequency.jpg) |
 
-While the standard deviation is only 68.3 across three sets, the graph is way too spiky to be considered even decent. Fortunately, the spikes occur at different positions for each run, suggesting some level of unpredictability. Also, running this function multiple times never crashed the ATtiny3224, implying it is relatively safe to **read** directly from the memory addresses, uninitialised or not.
+While the Uno and Leonardo seems to display some decent results, the ATtiny3224 seems to have lots of spikes. Again, since I am going to combine an entropy pool of not-so-ideal random numbers, I am not going to be too concerned about those spikes here.
 
-While not ideal to use alone, they can be still contribute to the entropy pool when used together with the other methods, thus I will leave it in the library.
+Also, the MCUs did not crash during any of these tests, it seems like it is safe to read uninitialised RAM.
+
 
 ## Ranclock: The Clock Jitters
-When I asked chatGPT about clock jitters, it suggested an experiment similar to:
-- Get the starting time using `micros()`.
-- `delay` for 1ms (or 1000us).
-- Get the ending time using `micros()`.
-- Calculate ending time - starting time.
+When asked, chatGPT gave me the idea what the two timers from the same clock source can produce differences due to jitters and software-related inaccuracies. As we know, we should never trust chatGPT without verification, thus I decided to XOR two bytes, one from each timer of the Arduino and see if the results are random. I chose two timers that are normally already active so users will not need to manually enable them. I dub this "Ranclock".
 
-Since `micros()` measures the amount of microseconds passed since the sketch is running, doing so should result in 1000. Even if there are certain rounding errors, the number should remain the same. However, this is what I got across three different microcontrollers:
+| ATtiny3224 | Arduino Uno R3 | Arduino Leonardo |
+|------------|----------------|------------------|
+| ![](extras/ATtiny3224_Ranclock_Frequency.jpg) | ![](extras/Arduino_Uno_R3_Ranclock_Frequency.jpg) | ![](extras/Arduino_Leonardo_Ranclock_Frequency.jpg) |
 
-While this would be understandable if there are multiple clock sources, there is usually only one on Arduino and the timers are prescaled from the same clock source. chatGPT explained it as a combination of clock jitter, imprecise hardware and rounding errors on software. As we all know, we should never trust chatGPT entirely.
-
-Seeing that the timers are not precise, I took the least significant 8-bits of two timers and XOR the result to give me my random number. I dub this "Ranclock":
-
-![](extras/Ranclock_Frequency.jpg)
-
-There are spikes but they do not seem to abrupt, which may mean some ranges of number occur more often than others. Also it is a concern than all three sets are of similar shape suggesting some level of predictability. The average standard deviation across the sets is 76.7.
-
-Similar to Ramdom, this would be kept and contribute towards the entropy pool.
+ATtiny3224 seems to produce the best results of all, though it should be noted all three sets seems to produce similar graphs, which might mean some kind of sequence looping. Meanwhile the results for Uno and Leonardo are filled with spikes and dips. Similar to the others, I am adding Ranclock to the entropy pool.
 
 
 ## Rainput: Imprecise Humans
@@ -216,37 +212,224 @@ Human input can be one source of random number, since we humans are unlikely to 
 
 I dub this method "Rainput". Since `millis()` and `micros()` return the time in four bytes unsigned long, I can XOR these eight bytes (four from each) to get a random byte.
 
-Initially it seems like a repetition of Ranclock, since that deals with timers and clock as well, but the resulting graph looks different:
+Initially it seems like a repetition of Ranclock, since that deals with timers and clock as well, but the resulting graph looks quite different:
 
-![](extras/Rainput_Frequency.jpg)
+| ATtiny3224 | Arduino Uno R3 | Arduino Leonardo |
+|------------|----------------|------------------|
+| ![](extras/ATtiny3224_Rainput_Frequency.jpg) | ![](extras/Arduino_Uno_R3_Rainput_Frequency.jpg) | ![](extras/Arduino_Leonardo_Rainput_Frequency.jpg) |
 
-There are not obvious spikes and dips and the average standard deviation is 74.4, this looks like good quality random numbers. Not to mentioned the random numbers are generated back to back in a loop, which means that if they are generated based on human interaction, they would have more unpredictability.
+These random numbers look pretty good to be added to the pool, though it is hard to tell if there are any looping sequences, especially since all three sets from Leonardo exhibit similar shapes.
+
 
 ## AmostRandom: Altogether Now!
 
 Taking one random byte from each of the four methods, we can once again XOR them to give us the final random byte:
 
-![](extras/AlmostRandom_Frequency.jpg)
+| Setup   | ATtiny3224 | Arduino Uno R3 | Arduino Leonardo |
+|---------|------------|----------------|------------------|
+| Minimal | ![](extras/ATtiny3224_AlmostRandom_Frequency_Minimal_Setup.jpg) | ![](extras/Arduino_Uno_R3_AlmostRandom_Frequency_Minimal_Setup.jpg) | ![](extras/Arduino_Leonardo_AlmostRandom_Frequency_Minimal_Setup.jpg) |
+| Maximal | ![](extras/ATtiny3224_AlmostRandom_Frequency_Maximal_Setup.jpg) | ![](extras/Arduino_Uno_R3_AlmostRandom_Frequency_Maximal_Setup.jpg) | ![](extras/Arduino_Leonardo_AlmostRandom_Frequency_Maximal_Setup.jpg) |
 
-The average standard deviation across three sets is 74.1, which is the same as the ones from random.org. There are no obvious spikes and dips and the frequencies lies in between 20-40, just like those from random.org.
-
-Note that for this test, the same eight-antennae setup as [mentioned above](#eightantennae) is used for Ranalog().
+The minimal setup uses one pin with no antenna for analogRead, while the maximal one uses all possible analog pins on the development board with antennae of various length. All of them give decent results and it did not seem to matter if antennae are used or not.
 
 Obviously, more research is needed to prove the quality of these random numbers, but I would say these should be good enough for most non-critical, unimportant, causal, recreational activities requiring random numbers.
 
+Here are the overview for the other boards:
+
+| Arduino Mega | ESP32S3 Dev Kit C |
+|--------------|-------------------|
+| ![](extras/Arduino_Mega_Overview_Frequency.jpg) | ![](extras/ESP32S3_Overview_Frequency.jpg) |
+
+
 ## Speed
 
+I produced five sets of 10,000 random numbers to get an average timing to generate one of them. All timings in milliseconds.
+
+| Method       | ATtiny3224 | Arduino Uno R3 | Arduino Leonardo |
+|--------------|------------|----------------|------------------|
+| Ranalog      | 0.12440    | 0.89600        | 0.89632          |
+| Ramdom       | 1.23216    | 1.03100        | 1.29536          |
+| Ranclock     | 0.00064    | 0.00084        | 0.00084          |
+| Rainput      | 0.04766    | 0.05660        | 0.05684          |
+| AlmostRandom | 1.41178    | 1.99264        | 2.25728          |
+
+<br>
 
 # Public Functions
-## AlmostRandom()
 
-Constructor to initialise values. No parameters.
+Note: When passing an address to a function, be sure to cast it as a pointer first.
+For example, if you want to pass `0x100` as a parameter to `void function(byte* address)`, write it as `function((byte*)0x100)`. 
 
+## _byte_ getRandomByte()
+Get a new random 8-bit byte, which is a number between 0 to 255. This uses all enabled methods (Ranalog, Ramdom, Ranclock or Rainput).
 
-##  _byte_ getRandomByte()
+## _byte_ getLastRandomByte()
+Get the previously generated random byte.
 
-Get a random number as a byte, from 0 to 255.
+## _byte_ getLastRunCode()
+The run code denotes which random methods were used when `getRandomByte()` was last called.
+
+| Bits ||||||||
+|------|---|---|---|---|---|---|---|
+| 7    | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
+| Not used. | Not used. | Not used. | Not used. | 1 if Ranalog was used. Else 0. | 1 if Ramdom was used. Else 0. | 1 if Ranclock was used. Else 0. | 1 if Rainput was used. Else 0. |
+
+You may use a bitmask to check if the random methods were used or not.
+
+##  _int16_t_ getRandomInt()
+Get a random signed 16-bit integer (-32,768 to 32,767), which is `int` for most classic AVR Arduinos. This is accomplished by concatenating multiple random bytes from `getRandomByte()`.
+
+## _uint16_t_ getRandomUInt()
+Get a random unsigned 16-bit integer (0 to 65,535), which is `unsigned int` for most classic AVR Arduinos. This is accomplished by concatenating multiple random bytes from `getRandomByte()`.
+
+## _int32_t_ getRandomLong()
+Get a random signed 32-bit integer (-2,147,483,648 to 2,147,483,647), which is `long` for most classic AVR Arduinos. This is accomplished by concatenating multiple random bytes from `getRandomByte()`.
+
+## _uint32_t_ getRandomULong()
+Get a random unsigned 32-bit integer (0 to 4,294,967,295), which is `unsigned long` for most classic AVR Arduinos. This is accomplished by concatenating multiple random bytes from `getRandomByte()`.
+
+## _float_ getRandomFloat()
+Get a random `float`, which is 32-bits for most classic AVR Arduinos. The random `float` ranges from -2,147,483,648 to 2,147,483,647 and can possibly be `inf`. 
+
+This is accomplished by dividing two 32-bit integer (`signed long` for most classic Arduinos), where the smallest possible number is -2,147,483,648/1 and the biggest being 2,147,483,647/1 and anything that divides by zero will be `inf`. However due to the precision of `float`, not all values will be represented exactly. 
+
+## _void_ enableRanalog(_bool_ myEnable)
+Enables the Ranalog method if `myEnable` is `true` and disables if it is `false`. This is enabled by default.
+
+## _bool_ isEnabledRanalog()
+Returns `true` is the Ranalog method is enabled, else `false`.
+
+## _void_ setRanalog(_byte_ myAnalogPin);
+Set `myAnalogPin` to be used with Ranalog. All eight bits will be generated from this pin.
+
+## _void_ setRanalog(_byte_ myAnalogPins[byteSize])
+Set an array of pins, `myAnalogPins` to be used with Ranalog. This array needs to have eight elements (pins). Each element corresponds to the generation of one bit. 
+
+For example `myAnalogPins[0]` could contain Pin A0, where it will be `analogRead()` to determine the 0th random bit of the byte.
+
+In this way, users can choose to repeat pins if there are not enough accessible pins for that supports `analogRead()`.
+
+## _void_ setEvenIsZero (_bool_ myEvenIsZero)
+If `myEvenIsZero` is `true`, an even `analogRead()` result will be a `0`. Else if `myEvenIsZero` is `false`, it will be `1`.
+ 
+## _bool_ isEvenZero()
+Returns `true` if an even `analogRead()` result produces a `0` in the random byte, else `false`.
+
+## _byte_ getRanalog()
+Get a random byte using just the Ranalog method.
+
+## _byte_ getLastRanalog()
+Get the last byte generated using the Ranalog method.
+
+## _void_ enableRamdom(bool myEnable)
+Enables the Ramdom method if `myEnable` is `true` and disables if it is `false`.
+
+## _bool_ isEnabledRamdom()
+Returns `true` is the Ramdom method is enabled, else `false`.
+
+## _void_ setRamdom(_byte*_ myRamStart, _byte*_ myRamEnd)
+Set the starting address of RAM to read using `myRamStart` and then ending (inclusive) address with `myRamEnd`.
+
+## _byte_ getRamdom()
+Get a random byte using just the Ramdom method.
+
+## _byte_ getLastRamdom()
+Get the last byte generated using the Ramdom method.
+
+## _void_ enableRanclock(_bool_ myEnable)
+Enables the Ranclock method if `myEnable` is `true` and disables if it is `false`.
+
+## _bool_ isEnabledRanclock()
+Returns `true` is the Ranclock method is enabled, else `false`.
+
+## _void_ setRanclock(_uint32_t*_ myTimerACountAddress, _uint32_t*_ myTimerBCountAddress)
+**Exclusive method for ESP32S3.** `myTimerACountAddress` sets the address to get the count from the first timer and `myTimerBCountAddress` to get the count from the second timer. Users need to enable these timers manually, see [here](#esp32s3timer).
+
+## _void_ setLatch(_uint32_t*_ myTimerALatchAddress, _uint32_t*_ myTimerBLatchAddress)
+**Exclusive method for ESP32S3.** `myTimerALatchAddress` corresponds to the update address for `myTimerACountAddress` for the readings to be latched and read while `myTimerBLatchAddress` is for `myTimerBCountAddress`.
+
+## _void_ setRanclock(_byte*_ myTimerACountAddress, _byte*_ myTimerBCountAddress)
+`myTimerACountAddress` sets the address to get the count from the first timer and `myTimerBCountAddress` to get the count from the second timer. Most of the time, the timers should already be enabled on classic AVR Arduinos.
+
+## _byte_ getRanclock()
+Get a random byte using just the Ranclock method.
+
+## _byte_ getLastRanclock()
+Get the last byte generated using the Ranclock method.
+
+## _void_ enableRainput(_bool_ myEnable)
+Enables the Rainput method if `myEnable` is `true` and disables if it is `false`.
+
+## _bool_ isEnabledRainput()
+Returns `true` is the Rainput method is enabled, else `false`.
+
+## _byte_ getRainput()
+Get a random byte using just the Rainput method.
+
+## _byte_ getLastRainput()
+Get the last byte generated using the Rainput method.
+
+## static _char*_ toBin(_unsigned long_ myLong, _byte_ bitCount)
+This static function returns a C-string of the the binary representation of `myLong`. It will be of `bitCount` length and zero padded. This can be useful to visualise and inspect the random numbers. 
+
+On classic AVR Arduinos, `myLong` will be 32-bits (0 to 4,294,967,295) maximum while `bitCount` will be 8-bits (0-255). Casting signed integers to `unsigned long` should also work.
+
+For example, `toBin(25, 8)` will return "00011001". `toBin(100, 4)` will return "0100".
+
+## InsertionSort functions
+A helper library is also included to help sort the generated random numbers if needed. I used to use quicksort but I realised the MCU Serial outbecome became unstable after a while, perhaps due to memory issues. Thus I chose to use Insertion Sort since it has a relatively small memory footprint and supposedly fast for small datasets.
+
+To use, kindly `#include<InsertionSort.h>`. Also remember to include the data type in the diamond operator when calling these static functions, for example `InsertionSort<byte>::sort(myArray, 10)`.
+
+### static _void_ sort(_T_ arr[], _unsigned int_ size)
+Sort the array `arr` in ascending order, the user must make sure the function gets the correct `size` of the array that is going to get sorted.
+
+### static _void_ printArray(_T_ arr[], _unsigned int_ size)
+Sort the array `arr`, the user must make sure the function gets the correct `size` of the array that is going to get sorted. Each element will be printed with a space in between. Note that this uses Arduino's Serial.print(), and thus not every data type can be printed.
+
+### static _void_ printlnArray(_T_ arr[], _unsigned int_ size)
+Same as `printArray(T arr[], unsigned int size)`, but prints a new line after the last space. 
 
 # Extra: Setup Photos
 # Extra: Manual Setup for Ramdom and Ranclock
+If the users are using a MCU that is not detected by this library, they need to set up Ramdom and Ranclock manually using the relevant setter functions. The start and end of the RAM as well as functionalities relating to timers are often referenced by their memory addresses, and those are what will be used for the setups.
 
+Case in point, there is a memory address to the first byte and one for the last byte of the RAM. There are also memory addresses to the registers of the peripherals (like timers), which are special memory to store their configurations and data.
+
+Memory addresses are often written in hexadecimal, for example `0x0100`. `0x` denotes that `0100` is in hexadecimal instead of decimal. If users need help with hexadecimal arithmetic, they can use the Programmer mode in the Windows Calculator program. Remember to select "HEX" when calculation in hexadecimals.
+
+To know exactly which memory addresses are needed, users can refer to the datasheet of the MCU used, which can often be downloaded from the manufacturer’s website.
+
+There are usually two ways the addresses are represented:
+- Direct addresses
+- Offset addresses
+
+In direct addresses, the actual memory address of the components you need are listed in the datasheet. This is the address of ____ of the ATMega32u4 used in the Arduino Leonardo:
+
+While offset addresses are used for ___ the data sheet of ATtine3224:
+
+
+To get the actual address, users need to look for the base address of ___, usually under the memory section of the datasheet:
+
+The actual address will be  `base address + offset`. In this case,
+
+The memory in the memory address can be read from or written to. One address usually corresponds to one byte of memory, so to read the byte at `0x0100`, we can write:
+```
+// If you do not cast 0x0100 to byte*,
+// it will be treated as a regular integer rather than an address.
+byte* memAdd = (byte*)0x0100; 
+byte memVal = *memAdd;
+```
+
+and to write to the address,
+
+```
+byte* memAdd = (byte*)0x0100; 
+*memAdd = 255; // or 11111111 in binary
+```
+
+Note that it is not safe to write to unknown addresses in RAM and some peripheral register addresses are read-only. 
+
+If the data to be read from or written to is less than one byte, you may use bitmasking to do so. Refer to the "Extra: Bitmasking" section under [MCUVoltage](https://github.com/cygig/MCUVoltage?tab=readme-ov-file#extra-bitmasking).
+
+I urge users to take the time to study the datasheet, to find out the functionalities and operations of the peripherals of the MCU.
