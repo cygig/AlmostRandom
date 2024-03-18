@@ -26,6 +26,11 @@ Please note that AlmostRandom is designed for non-critical applications and may 
   - [InsertionSort Functions](#insertionsortfunctions)
 - [Extra: Setup Photos](#extra-setup-photos)
 - [Extra: Manual Setup for Ramdom and Ranclock](#extra-manual-setup-for-ramdom-and-ranclock)
+  - [Memory, RAM And Register](#-memory-ram-and-register)
+  - [Hexadecimals](#-hexadecimals)
+  - [Datasheet](#datasheet)
+  - [Datasheet (Recap)](#datasheet-recap)
+  - [Read and Write](#read-and-write)
 - [License](#license)
 
 # Updates
@@ -409,27 +414,71 @@ Same as `printArray(T arr[], unsigned int size)`, but prints a new line after th
 <br>
 
 # Extra: Manual Setup for Ramdom and Ranclock
+## Memory, RAM And Register
 If the you are using a MCU that is not detected by this library, you need to set up Ramdom and Ranclock manually using the relevant setter functions. The start and end of the RAM as well as functionalities relating to timers are often referenced by their memory addresses, and those are what will be used for the setups.
 
 Case in point, there is a memory address to the first byte and one for the last byte of the RAM. There are also memory addresses to the registers of the peripherals (like timers), which are special devoted memory to store their configurations and data.
 
-Memory addresses are often written in hexadecimal, for example `0x0100`. `0x` denotes that `0100` is in hexadecimal instead of decimal. If you need help with hexadecimal arithmetic, they can use the Programmer mode in the Windows Calculator program. Remember to select "HEX" when calculation in hexadecimals.
+## Hexadecimals
+Memory addresses are often written in hexadecimal, for example `0x0100`. `0x` denotes that `0100` is in hexadecimal instead of decimal. Hexadecimal numbers goes like this: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F, 10, 11, 12 ... 19, 1A, 1B ... 1F, 20, 21 ... They are of base 16 instead of the regular base 10 decimal numbers.
 
+If you need help with hexadecimal arithmetic, you can use the Programmer mode in the Windows Calculator program. Remember to select "HEX" when doing calculation in hexadecimals.
+
+## Datasheet
 To know exactly which memory addresses are needed, you can refer to the datasheet of the MCU used, which can often be downloaded from the manufacturer’s website.
 
-There are usually two ways the addresses are represented:
+There are usually two ways the addresses are represented, I have no idea if there exist a terminology for them but I call them:
 - Direct addresses
 - Offset addresses
 
-In direct addresses, the actual memory address of the components you need are listed in the datasheet. This is the address of ____ of the ATMega32u4 used in the Arduino Leonardo:
+Here we have some examples to demonstrate.
 
-While offset addresses are used for ___ the data sheet of ATtine3224:
+This is the datasheet for the ATMega32u4. Under "AVR Memories", you can see the the different parts of the memory, and right there we can see the start and end address for the SRAM:
+
+![](extras/datasheet_atmega32u4_avr_memories.jpg)
+
+If we scroll down the table of contents, we can locate the section regarding one of the timers, which you can read for more information:
+
+![](extras/datasheet_atmega32u4_8-bit_timer.jpg)
+
+In the subsection of "Timer/Counter Register - TCNT0", we find the register that stores the count of the timer, however no address is  given:
+
+![](extras/datasheet_atmega32u4_timer_counter_register.jpg)
+
+There is usually a page which shows the summary of all the registers in the MCU, and with some searching, we can find it along with address of TCNT0. In this case we use the address in the brackets, which is `0x46`, and I have no idea the difference between the two addresses:
+
+![](extras/datasheet_atmega32u4_register_summary.jpg)
+
+This is the direct address of TCNT0, you can read from this address as-is. Now we look at the same timer from ATMega328PB, this time you will realise the address is written directly on the page documenting the timer register:
+
+![](extras/datasheet_atmega328pb_timer_counter_register.jpg)
+
+We can double check the register summary, which gives us the same `0x46` result:
+
+![](extras/datasheet_atmega328pb_register_summary.jpg)
+
+Looking at the datasheet of ATtiny3224, we see that the address for Timer/Counter Type A is `0x20`:
+
+![](extras/datasheet_attiny3324_timer_counter_register.jpg)
+
+However, if we look at the register summary, which is called "Peripheral Address Map" in this case, we see that TCA0 (Timer/Counter Type A Instance 0) has a base address of 0x0A00. We also note that there are two instances of Timer/Control Type B with different addresses:
+
+![](extras/datasheet_attiny3324_peripheral_address.jpg)
+
+In this case for peripherals in groups, the addresses are often given as an offset, where `actual address = base address + offset`. The offset is usually the same for all instances of the same peripheral group while each of them has a different base address.
+
+In this case, the count address for TCA0 will be `0x0A00` + `0x20` = `0x0A20`.
+
+## Datasheet (Recap)
+To recap:
+- RAM and timer are controlled using memory addresses
+- Memory addresses can be found in datasheets
+- Datasheet may provide you with the direct memory addresses
+- Datasheet may also present addresses as offsets from a base address
+- Check the register summary, which can be called other names, usually involving "register", "address" or "map" 
 
 
-To get the actual address, you need to look for the base address of ___, usually under the memory section of the datasheet:
-
-The actual address will be  `base address + offset`. In this case,
-
+## Read and Write
 The memory in the memory address can be read from or written to. One address usually corresponds to one byte of memory, so to read the byte at `0x0100`, we can write:
 ```
 // If you do not cast 0x0100 to byte*,
