@@ -419,11 +419,12 @@ Same as `printArray(T arr[], unsigned int size)`, but prints a new line after th
 <br><br> 
 
 # Extra: Setup Photos
-| ![](extras/photo_antennae.jpg)<br>_Different antennae being displayed_ | ![](extras/photo_attiny3224_65_antenna.jpg)<br>_DIY ATtiny3224 development board with 6.5cm antenna_ |
+| | |
 |-|-|
+| ![](extras/photo_antennae.jpg)<br>_Different antennae being displayed_ | ![](extras/photo_attiny3224_65_antenna.jpg)<br>_DIY ATtiny3224 development board with 6.5cm antenna_ |
 | ![](extras/photo_attiny3224_100_antenna.jpg)<br>_DIY ATtiny3224 development board with 10.0cm antenna_ | ![](extras/photo_attiny3224_multi_antennae.jpg)<br>_DIY ATtiny3224 development board with multiple antennae_ |
 | ![](extras/photo_arduino_uno_r3_multi_antennae.jpg)<br>_Arduino Uno R3 compatible development board with multiple antennae_ | ![](extras/photo_arduino_leonardo_100_antenna.jpg)<br>_Arduino Leonardo compatible development board with multiple antennae_ |
-| ![](extras/photo_esp32s3.jpg)<br>_ESP32-S3 DevKit C compatible development board with multiple antennae_ | |
+| ![](extras/photo_esp32s3.jpg)<br>_ESP32-S3 DevKit C compatible development board_ | |
 
 <br><br>
 
@@ -519,7 +520,8 @@ I urge you to take the time to study the datasheet, to find out the functionalit
 # License
 
 AlmostRandom generates random number from a few entropy sources within the Arduino.
-Copyright (C) 2024  cygig
+<br>
+Copyright (C) 2024 cygig
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
