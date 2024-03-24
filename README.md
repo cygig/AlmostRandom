@@ -318,7 +318,7 @@ Get a random signed 32-bit integer (-2,147,483,648 to 2,147,483,647), which is `
 Get a random unsigned 32-bit integer (0 to 4,294,967,295), which is `unsigned long` for most classic AVR Arduinos. This is accomplished by concatenating multiple random bytes from `getRandomByte()`.
 
 ## _float_ getRandomFloat()
-Get a random `float`, which is 32-bits for most classic AVR Arduinos, it could be any possible value that `float` can hold, including `inf`. This is done by generating a random unsigned long of 32-bits, then casting it `float`. 
+Get a random `float`, which is 32-bits for most classic AVR Arduinos. You can get between -32,768 to 32,767 and `inf`. This works by using `getRandomInt()` twice, casting the results to `float` and dividing them. The value stored in `float` may not be exact.
 
 ## _void_ enableRanalog(_bool_ myEnable)
 Enables the Ranalog method if `myEnable` is `true` and disables if it is `false`. This is enabled by default.
