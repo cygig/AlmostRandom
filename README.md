@@ -1,5 +1,7 @@
 # AlmostRandom
 
+![](extras/AlmostRandom.jpg)
+
 AlmostRandom generates random number from a few entropy sources within the Arduino. Unlike traditional methods that rely on hardware noises or pseudo-random algorithms, AlmostRandom combines multiple not-so-ideal sources to produce random numbers that are hard to predict and chaotic, suitable for casual, recreational, and non-critical applications.
 
 This library harnesses various sources of randomness, including the parity of analogRead() values, the contents of RAM, the values of internal timers and micros() and millis().
@@ -37,7 +39,8 @@ Please note that AlmostRandom is designed for non-critical applications and may 
 <br><br>
 
 # Updates
-
+- 0.17.0
+    - Ready to go.
 - 0.10.0
 	- Finished implementing most methods.
 - 0.6.0
