@@ -34,11 +34,11 @@ AlmostRandom::AlmostRandom()
 
   //== Initialise Analog Pins ==//
   // If A0 is defined, that is usually an assignment to an analog pin, to play safe, we cast it to a byte
-  // else just assign all zeros
+  // else just assign all ones, since for ESP32, 0 cannot be used
   #if defined(PIN_A0)
     for (byte i=0; i<byteSize; i++) { analogPins[i]=(byte)A0; }
   #else
-    for (byte i=0; i<byteSize; i++) { analogPins[i]=0; }
+    for (byte i=0; i<byteSize; i++) { analogPins[i]=1; }
   #endif
 
 
@@ -143,6 +143,13 @@ byte AlmostRandom::getRandomByte()
 
   return result;
 
+}
+
+
+
+byte AlmostRandom::getLastRandomByte()
+{
+  return random_Byte;
 }
 
 
