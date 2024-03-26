@@ -40,8 +40,6 @@ byte stats[byteMax];
 // Prompt to ask users to press Enter
 const char prompt[]="Press Enter to test random numbers and generate reports.";
 
-// Define rows and columns to print report
-const byte textCol=8;
 
 
 void setup()
@@ -72,10 +70,10 @@ void loop()
   generateRandomNo();
 
   Serial.println("Text Report (Possible Value: Frequency)\n---------------------------------------");
-  drawTextReport();
+  drawTextReport(8);
 
   Serial.println("\nFrequency Graph\n---------------");
-  drawGraph(0, 127, 24);
+  drawGraph(0, 127, 24, 16);
 
   clearSerial();
 }
@@ -100,8 +98,13 @@ void generateRandomNo()
 }
 
 
-void drawTextReport()
+void drawTextReport(byte textCol)
 {
+  // You cannot have zero columns
+  if (textCol==0) textCol=1;
+
+  byte count=1; // This must be 1, not 0, to work.
+
   // Print frequencies of all byte values
   for (int i=0; i<byteMax; i++)
   {
@@ -119,63 +122,155 @@ void drawTextReport()
     Serial.print(stats[i]);
 
     // If frequency is 255, add a '+' size
-    if (stats[i]==255)
-      Serial.print("+");
+    if (stats[i]==255) Serial.print("+");
 
     // New line after eight byte values, else print tabs
-    if ( i%textCol == (textCol-1) )
+    if ( count % textCol == 0 )
+    {
       Serial.println();
+      count=1;
+    }
     else
+    {
       Serial.print("\t\t");
+      count++;
+    }
+    
+    
   }
 }
 
 
-void drawGraph(int rangeLow, int rangeHigh, byte row)
+void drawGraph(unsigned int rangeLow, unsigned int rangeHigh, byte rows, byte xLabelInt)
 {
-  for (int i=rangeLow; i<=rangeHigh; i++)
+  //== Map the actual values to the scaled one base on row ==//
+  for (unsigned int i=rangeLow; i<=rangeHigh; i++)
   {
     byte temp = stats[i];
-    temp = map(temp, 0, byteMax-1, 0, row-1); 
-    temp = row-1-temp;
+    temp = map(temp, 0, byteMax-1, 0, rows-1); // Arduino map function
+    temp = rows-1-temp; // We invert the values as graph is printed top down
     stats[i] = temp;  
   }
 
+  //== Define the positions of the  Y axis labels ==//
+  byte mrk255 = 0;
+  byte mrk191 = (rows/4)-1;
+  byte mrk127 = (rows/2)-1;
+  byte mrk63  = (rows*3/4)-1; // Don't involve floats
+  byte mrk0   = rows-1;
 
-  for (byte i=0; i<row; i++)
+  //== Define the positions of the Y axis title ==//
+  char yTitle[]="Frequency";
+  byte yTitleLen = strlen(yTitle);
+  if (rows<yTitleLen+2) rows=yTitleLen+2; // Increase the rows if not enough
+  byte yTitleStart = (rows-yTitleLen)/2; // Centre the title
+  byte yTitleEnd = yTitleStart + yTitleLen - 1; //-1 because you write to yTitleStart itself
+  byte yTitleIndex = 0; // Index to keep track of which character of the title to print
+
+  //== Define the positions of the X axis title ==//
+  char xTitle[]="Possible Values";
+  byte xTitleLen = strlen(xTitle);
+  unsigned int dataRange = rangeHigh - rangeLow + 1; //+1 because need to include rangeHigh
+  byte xTitleStart;
+  // If the X axis isn't long enough, just print from the start ()
+  // We don't want to control the data range here unlike the rows
+  if (dataRange<((unsigned int)xTitleLen+2)) xTitleStart=0; 
+  else xTitleStart = (dataRange-xTitleLen)/2; // Else, print in the middle
+
+
+  //== Loop each row and print the graph ==//
+  for (byte i=0; i<rows; i++)
   {
-    if (i==0) Serial.print("255");
-    else if (i==(row/2)) Serial.print("128");
-    else if (i==(row-1)) Serial.print("  0");
-    else Serial.print("   ");
+    // Print the Y axis title
+    if (i>=yTitleStart && i<=yTitleEnd)
+    {
+      Serial.print(yTitle[yTitleIndex]);
+      Serial.print(" ");
+      yTitleIndex++;
+    }
+    else Serial.print("  ");
 
+    // Print the Y axis labels
+    if (i == mrk255)
+      Serial.print("255");
+    else if (i == mrk191)
+      Serial.print("191");
+    else if (i == mrk127)
+      Serial.print("127");
+    else if (i == mrk63)
+      Serial.print(" 63");
+    else if (i == mrk0)
+      Serial.print("  0");
+    else
+      Serial.print("   ");
+
+    // Print the Y axis
     Serial.print("|");
 
-    for (int j=rangeLow; j<=rangeHigh; j++)
+    // Print the data
+    for (unsigned int j=rangeLow; j<=rangeHigh; j++)
     {
-      if(stats[j]==i) Serial.print("*");
-      else if (i==row-1) Serial.print("-");
+      // Draw a star if the row number matches the mapped value
+      if(i==stats[j]) Serial.print("."); 
+
+      // Else if there is no match and it is the last row, draw X axis
+      else if (i==rows-1) Serial.print("-");
+
+      // Else print white space
       else Serial.print(" ");
     }
     Serial.println();
   }
 
-  const byte interval=16;
-  byte count=0;
-  Serial.print("    ");
-  for (int j=rangeLow; j<=rangeHigh; j++)
-  {
-    if (count%interval==0)
-    {
-      Serial.print(j);
-      if (j<10) j+=1;
-      else if (j<100) j+=2;
-      count=0;
-    }
-    else Serial.print(" ");
-    count++;
 
+  // Print the X axis labels
+  Serial.print("      "); // Spaces to account for Y axis and its labels
+  byte count=1; // This must start from 1 to work, not 0
+  byte skip=0;
+  for (unsigned int j=rangeLow; j<=rangeHigh; j++)
+  {
+    // Print X axis labels every xLabelInt. 
+    if ( count%xLabelInt == 0 )
+    {
+      // Print the X axis label
+      Serial.print(j);
+      // Do nothing is label is single digit, rememeber brackets for blank if()
+      if (j<10) {} 
+      // Else if double digit, we skip one loop so the X axis will not be too long
+      else if (j<100) { j+=1; } 
+      // Else it is triple digit, we skip two loops
+      else { j+=2; }
+      // Reset counter
+      count=1;
+    }
+    // Also force it to print the labels for the first and last values.
+    else if ((j==rangeLow) || (j==rangeHigh))
+    {
+      // Print the X axis label
+      Serial.print(j);
+      // Do nothing is label is single digit, rememeber brackets for blank if()
+      if (j<10) {} 
+      // Else if double digit, we skip one loop so the X axis will not be too long
+      else if (j<100) { j+=1; } 
+      // Else it is triple digit, we skip two loops
+      else { j+=2; }
+      // Increase counter
+      count++;      
+    }
+    else 
+    { 
+      Serial.print(" ");
+      count++; 
+    }
+      
   }
+  Serial.println();
+
+  // Print the X axis title
+  Serial.print("      "); // Spaces to account for Y axis and its labels
+  for (byte i=0; i<xTitleStart; i++) Serial.print(" "); // Print blank spaces to pad the title
+  Serial.println(xTitle);
+
 }
 
 
