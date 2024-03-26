@@ -36,16 +36,12 @@ const int byteMax = 256;
 // 10,000/256 = 39 times. Anything more than 255 will be way too much.
 byte stats[byteMax];
 
-
-// Prompt to ask users to press Enter
-const char prompt[]="Press Enter to test random numbers and generate reports.";
-
-
-
 void setup()
 {
   Serial.begin(9600);
-  Serial.println(prompt);
+
+  // User need to press Enter to start the random number generation
+  promptUser();
 
   // You will need to enable the timers for ESP32-S3
   #if defined(CONFIG_IDF_TARGET_ESP32S3)
@@ -63,39 +59,89 @@ void loop()
 {
   while(Serial.available()==0){}
   
-  Serial.print("Generating ");
-  Serial.print(loops); 
-  Serial.println(" random numbers...\n");
-
   generateRandomNo();
 
-  Serial.println("Text Report (Possible Value: Frequency)\n---------------------------------------");
+  Serial.println("\nText Report (Possible Value: Frequency)\n---------------------------------------");
   drawTextReport(8);
 
   Serial.println("\nFrequency Graph\n---------------");
   drawGraph(0, 127, 24, 16);
+  drawGraph(128, 255, 24, 16);
+
+  Serial.println();
+  promptUser();
 
   clearSerial();
 }
 
 
+
 void generateRandomNo()
 {
+  // Variable to update the serial monitor
+  const byte segment = 20; // The Serial monitor will update this amount of times
+  unsigned int chunk = loops/segment; // Count will resrart once it hits this amount 
+  unsigned int count=1; // this needs to start from one.
+
+  // Variables to keep time
+  // Since Serial.print() can take quite some time, we can remove them from the tally, 
+  // we'll call this break time and measured in microseconds
+  unsigned long timeStart, timeEnd, timeTotal, breakStart, breakEnd, breakTotal=0;
+  double timePerLoop;
+
+  Serial.print("Generating ");
+  Serial.print(loops); 
+  Serial.print(" random numbers, this will take a while: ");
+
   // zero all values
   for (int i=0; i<byteMax; i++)
     stats[i] = 0;
 
+  timeStart = millis();
   // Generate 10,000 random numbers
   for (unsigned int i=0; i<loops; i++)
   {
+    
     byte temp = ar.getRandomByte();
+
     // If the frequency is already 255, remain at 255
     if (stats[temp]==byteMax-1) continue;
-
     // Else increase frequency by one
     else stats[temp]++;
+
+    // Start timing Serial.print()
+    breakStart = micros();
+
+    if ( count%chunk==0 )
+    {
+      Serial.print("#");
+      count = 1;
+    }
+    else count++;
+
+    // End and add to total break time.
+    breakEnd = micros();
+    breakTotal+=(breakEnd-breakStart);
   }
+
+  // End timer and calculate time
+  timeEnd = millis();
+  timeTotal = timeEnd-timeStart-(breakTotal/1000);
+  timePerLoop = (double)timeTotal/(double)loops;
+
+  Serial.println();
+
+  // Print time taken
+  Serial.print("Total Time: ");
+  Serial.print(timeTotal);
+  Serial.print(" millisec, excluding ");
+  Serial.print(breakTotal);
+  Serial.println(" microsec of Serial.print() time.");
+  Serial.print("Time per loop: ");
+  Serial.print(timePerLoop, 3);
+  Serial.println(" millisec.");
 }
+
 
 
 void drawTextReport(byte textCol)
@@ -139,6 +185,7 @@ void drawTextReport(byte textCol)
     
   }
 }
+
 
 
 void drawGraph(unsigned int rangeLow, unsigned int rangeHigh, byte rows, byte xLabelInt)
@@ -226,41 +273,39 @@ void drawGraph(unsigned int rangeLow, unsigned int rangeHigh, byte rows, byte xL
   // Print the X axis labels
   Serial.print("      "); // Spaces to account for Y axis and its labels
   byte count=1; // This must start from 1 to work, not 0
-  byte skip=0;
   for (unsigned int j=rangeLow; j<=rangeHigh; j++)
   {
     // Print X axis labels every xLabelInt. 
     if ( count%xLabelInt == 0 )
     {
-      // Print the X axis label
-      Serial.print(j);
-      // Do nothing is label is single digit, rememeber brackets for blank if()
-      if (j<10) {} 
-      // Else if double digit, we skip one loop so the X axis will not be too long
-      else if (j<100) { j+=1; } 
-      // Else it is triple digit, we skip two loops
-      else { j+=2; }
-      // Reset counter
-      count=1;
+        // Print the X axis label
+        Serial.print(j);
+        // If single digit, reset count to 1
+        if (j<10) { count=1; } 
+        // Else if double digit, we skip one loop so the X axis will not be too long, then reset count to 2
+        else if (j<100) { j+=1; count=2; } 
+        // Else it is triple digit, we skip two loops and reset count to 3
+        else { j+=2; count=3; }
     }
+
     // Also force it to print the labels for the first and last values.
     else if ((j==rangeLow) || (j==rangeHigh))
     {
-      // Print the X axis label
-      Serial.print(j);
-      // Do nothing is label is single digit, rememeber brackets for blank if()
-      if (j<10) {} 
-      // Else if double digit, we skip one loop so the X axis will not be too long
-      else if (j<100) { j+=1; } 
-      // Else it is triple digit, we skip two loops
-      else { j+=2; }
-      // Increase counter
-      count++;      
+        // Print the X axis label
+        Serial.print(j);
+        // If single digit, increase count by 1
+        if (j<10) { count++; } 
+        // Else if double digit, we skip one loop so the X axis will not be too long, then increase count by 2
+        else if (j<100) { j+=1; count+=2; } 
+        // Else it is triple digit, we skip two loops and increase count by 3
+        else { j+=2; count+=3; }    
     }
+
+    // Else just print white spaces
     else 
     { 
-      Serial.print(" ");
-      count++; 
+        Serial.print(" ");
+        count++; 
     }
       
   }
@@ -274,6 +319,7 @@ void drawGraph(unsigned int rangeLow, unsigned int rangeHigh, byte rows, byte xL
 }
 
 
+
 // Function to clear Serial buffer
 void clearSerial()
 {
@@ -285,4 +331,11 @@ void clearSerial()
   {
     Serial.read();
   }
+}
+
+
+
+void promptUser()
+{
+  Serial.println(F("Press Enter to test random numbers and generate reports."));
 }
