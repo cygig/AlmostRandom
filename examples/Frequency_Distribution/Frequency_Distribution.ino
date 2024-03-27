@@ -13,7 +13,7 @@ if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth F
 */
 
 // Example: Frequency Distribution
-// This example will generate a report to show the frequency distribution of the random bytes
+// This example will generate a report to show the frequency distribution of the random bytes in both text and graph form. 
 
 #include "C:\Users\cygig\Desktop\AlmostRandom\src\AlmostRandom.h"
 #include "C:\Users\cygig\Desktop\AlmostRandom\src\AlmostRandom_ranalog.cpp"
@@ -26,7 +26,7 @@ if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth F
 AlmostRandom ar;
 
 // How many random numbers to generate
-const unsigned int loops=10000;
+const unsigned int loops = 10000;
 
 // Max of 256 values (0-255) in a byte
 const int byteMax = 256;
@@ -57,41 +57,41 @@ void setup()
 
 void loop()
 {
-  while(Serial.available()==0){}
+  while(Serial.available() == 0){}
   
   generateRandomNo();
 
-  Serial.println("\nText Report (Possible Value: Frequency)\n---------------------------------------");
+  Serial.println(F("\nText Report (Possible Value: Frequency)\n---------------------------------------"));
   drawTextReport(8);
 
-  Serial.println("\nFrequency Graph\n---------------");
+  Serial.println(F("\nFrequency Graph\n---------------"));
   drawGraph(0, 127, 24, 16);
   drawGraph(128, 255, 24, 16);
 
   Serial.println();
   promptUser();
-
   clearSerial();
 }
 
 
 
+// Generate loops number of random numbers, store the frequency into array and time
 void generateRandomNo()
 {
   // Variable to update the serial monitor
   const byte segment = 20; // The Serial monitor will update this amount of times
-  unsigned int chunk = loops/segment; // Count will resrart once it hits this amount 
-  unsigned int count=1; // this needs to start from one.
+  const unsigned int chunk = loops / segment; // Count will restart once it hits this amount 
+  unsigned int count = 1; // this needs to start from one.
 
   // Variables to keep time
   // Since Serial.print() can take quite some time, we can remove them from the tally, 
   // we'll call this break time and measured in microseconds
   unsigned long timeStart, timeEnd, timeTotal, breakStart, breakEnd, breakTotal=0;
-  double timePerLoop;
+  double timePerLoop; // double same as float for AVR Arduino, but ESP32-S3 will be able to use
 
-  Serial.print("Generating ");
+  Serial.print(F("Generating "));
   Serial.print(loops); 
-  Serial.print(" random numbers, this will take a while: ");
+  Serial.print(F(" random numbers, this will take a while: "));
 
   // zero all values
   for (int i=0; i<byteMax; i++)
@@ -105,80 +105,81 @@ void generateRandomNo()
     byte temp = ar.getRandomByte();
 
     // If the frequency is already 255, remain at 255
-    if (stats[temp]==byteMax-1) continue;
+    if ( stats[temp] == ( byteMax - 1 ) ) continue;
     // Else increase frequency by one
     else stats[temp]++;
 
     // Start timing Serial.print()
     breakStart = micros();
 
-    if ( count%chunk==0 )
+    if (count % chunk == 0)
     {
-      Serial.print("#");
+      Serial.print(F("#"));
       count = 1;
     }
     else count++;
 
     // End and add to total break time.
     breakEnd = micros();
-    breakTotal+=(breakEnd-breakStart);
+    breakTotal += (breakEnd - breakStart);
   }
 
   // End timer and calculate time
   timeEnd = millis();
-  timeTotal = timeEnd-timeStart-(breakTotal/1000);
-  timePerLoop = (double)timeTotal/(double)loops;
+  timeTotal = timeEnd - timeStart - (breakTotal / 1000);
+  timePerLoop = (double)timeTotal / (double)loops;
 
   Serial.println();
 
   // Print time taken
-  Serial.print("Total Time: ");
+  Serial.print(F("Total Time: "));
   Serial.print(timeTotal);
-  Serial.print(" millisec, excluding ");
+  Serial.print(F(" millisec, excluding "));
   Serial.print(breakTotal);
-  Serial.println(" microsec of Serial.print() time.");
-  Serial.print("Time per loop: ");
+  Serial.println(F(" microsec of Serial.print() time."));
+  Serial.print(F("Time per loop: "));
   Serial.print(timePerLoop, 3);
-  Serial.println(" millisec.");
+  Serial.println(F(" millisec."));
 }
 
 
 
+// Draw text report to Serial
 void drawTextReport(byte textCol)
 {
   // You cannot have zero columns
-  if (textCol==0) textCol=1;
+  if (textCol == 0) textCol = 1;
 
-  byte count=1; // This must be 1, not 0, to work.
+  byte count = 1; // This must be 1, not 0, to work.
 
   // Print frequencies of all byte values
   for (int i=0; i<byteMax; i++)
   {
     // if byte value is less than 10, pad two zeros
-    if(i<10)
-      Serial.print("00");
+    if(i < 10)
+      Serial.print(F("00"));
     // else if byte value is less than 100, pad one zero
-    else if (i<100)
-      Serial.print("0");
+    else if (i < 100)
+      Serial.print(F("0"));
     
     // Print byte value
     Serial.print(i);
-    Serial.print(": ");
+    Serial.print(F(": "));
     // Print frequency
     Serial.print(stats[i]);
 
     // If frequency is 255, add a '+' size
-    if (stats[i]==255) Serial.print("+");
+    if (stats[i] == 255) Serial.print(F("+"));
 
     // New line after eight byte values, else print tabs
-    if ( count % textCol == 0 )
+    if (count % textCol == 0)
     {
       Serial.println();
       count=1;
     }
     else
     {
-      Serial.print("\t\t");
+      Serial.print(F("\t\t"));
       count++;
     }
     
@@ -188,6 +189,7 @@ void drawTextReport(byte textCol)
 
 
 
+// Draw graph to Serial
 void drawGraph(unsigned int rangeLow, unsigned int rangeHigh, byte rows, byte xLabelInt)
 {
   //== Map the actual values to the scaled one base on row ==//
@@ -195,116 +197,110 @@ void drawGraph(unsigned int rangeLow, unsigned int rangeHigh, byte rows, byte xL
   {
     byte temp = stats[i];
     temp = map(temp, 0, byteMax-1, 0, rows-1); // Arduino map function
-    temp = rows-1-temp; // We invert the values as graph is printed top down
+    temp = rows - 1 - temp; // We invert the values as graph is printed top down
     stats[i] = temp;  
   }
 
   //== Define the positions of the  Y axis labels ==//
-  byte mrk255 = 0;
-  byte mrk191 = (rows/4)-1;
-  byte mrk127 = (rows/2)-1;
-  byte mrk63  = (rows*3/4)-1; // Don't involve floats
-  byte mrk0   = rows-1;
+  const byte mrk255 = 0;
+  const byte mrk191 = (rows / 4) - 1;
+  const byte mrk127 = (rows / 2) - 1;
+  const byte mrk63  = (rows * 3 / 4) - 1; // Don't involve floats
+  const byte mrk0   = rows - 1;
 
   //== Define the positions of the Y axis title ==//
-  char yTitle[]="Frequency";
-  byte yTitleLen = strlen(yTitle);
-  if (rows<yTitleLen+2) rows=yTitleLen+2; // Increase the rows if not enough
-  byte yTitleStart = (rows-yTitleLen)/2; // Centre the title
-  byte yTitleEnd = yTitleStart + yTitleLen - 1; //-1 because you write to yTitleStart itself
+  const char yTitle[] = "Frequency";
+  const byte yTitleLen = strlen(yTitle);
+  if ( rows < ( yTitleLen + 2 ) ) rows = yTitleLen + 2; // Increase the rows if not enough
+  const byte yTitleStart = (rows - yTitleLen) / 2; // Centre the title
+  const byte yTitleEnd = yTitleStart + yTitleLen - 1; //-1 because you write to yTitleStart itself
   byte yTitleIndex = 0; // Index to keep track of which character of the title to print
 
   //== Define the positions of the X axis title ==//
-  char xTitle[]="Possible Values";
-  byte xTitleLen = strlen(xTitle);
-  unsigned int dataRange = rangeHigh - rangeLow + 1; //+1 because need to include rangeHigh
+  const char xTitle[] = "Possible Values";
+  const byte xTitleLen = strlen(xTitle);
+  const unsigned int dataRange = rangeHigh - rangeLow + 1; //+1 because need to include rangeHigh
   byte xTitleStart;
   // If the X axis isn't long enough, just print from the start ()
   // We don't want to control the data range here unlike the rows
-  if (dataRange<((unsigned int)xTitleLen+2)) xTitleStart=0; 
-  else xTitleStart = (dataRange-xTitleLen)/2; // Else, print in the middle
+  if ( dataRange < ( (unsigned int)xTitleLen + 2 ) ) xTitleStart = 0; 
+  else xTitleStart = (dataRange - xTitleLen) / 2; // Else, print in the middle
 
 
   //== Loop each row and print the graph ==//
   for (byte i=0; i<rows; i++)
   {
-    // Print the Y axis title
-    if (i>=yTitleStart && i<=yTitleEnd)
+    // Print the Y axis title in between the positions
+    if ( i >= yTitleStart && i <= yTitleEnd )
     {
       Serial.print(yTitle[yTitleIndex]);
-      Serial.print(" ");
+      Serial.print(F(" "));
       yTitleIndex++;
     }
-    else Serial.print("  ");
+    else Serial.print(F("  "));
 
     // Print the Y axis labels
-    if (i == mrk255)
-      Serial.print("255");
-    else if (i == mrk191)
-      Serial.print("191");
-    else if (i == mrk127)
-      Serial.print("127");
-    else if (i == mrk63)
-      Serial.print(" 63");
-    else if (i == mrk0)
-      Serial.print("  0");
-    else
-      Serial.print("   ");
+    if (i == mrk255)      Serial.print(F("255"));
+    else if (i == mrk191) Serial.print(F("191"));
+    else if (i == mrk127) Serial.print(F("127"));
+    else if (i == mrk63)  Serial.print(F(" 63"));
+    else if (i == mrk0)   Serial.print(F("  0"));
+    else                  Serial.print(F("   "));
 
     // Print the Y axis
-    Serial.print("|");
+    Serial.print(F("|"));
 
     // Print the data
     for (unsigned int j=rangeLow; j<=rangeHigh; j++)
     {
       // Draw a star if the row number matches the mapped value
-      if(i==stats[j]) Serial.print("."); 
+      if(i == stats[j]) Serial.print(F(".")); 
 
       // Else if there is no match and it is the last row, draw X axis
-      else if (i==rows-1) Serial.print("-");
+      else if (i == rows - 1) Serial.print(F("-"));
 
       // Else print white space
-      else Serial.print(" ");
+      else Serial.print(F(" "));
     }
     Serial.println();
   }
 
 
   // Print the X axis labels
-  Serial.print("      "); // Spaces to account for Y axis and its labels
+  Serial.print(F("      ")); // Spaces to account for Y axis and its labels
   byte count=1; // This must start from 1 to work, not 0
   for (unsigned int j=rangeLow; j<=rangeHigh; j++)
   {
     // Print X axis labels every xLabelInt. 
-    if ( count%xLabelInt == 0 )
+    if (count % xLabelInt == 0)
     {
         // Print the X axis label
         Serial.print(j);
         // If single digit, reset count to 1
-        if (j<10) { count=1; } 
+        if (j < 10) { count = 1; } 
         // Else if double digit, we skip one loop so the X axis will not be too long, then reset count to 2
-        else if (j<100) { j+=1; count=2; } 
+        else if (j < 100) { j += 1; count = 2; } 
         // Else it is triple digit, we skip two loops and reset count to 3
-        else { j+=2; count=3; }
+        else { j += 2; count = 3; }
     }
 
     // Also force it to print the labels for the first and last values.
-    else if ((j==rangeLow) || (j==rangeHigh))
+    else if ( (j == rangeLow ) || (j == rangeHigh) )
     {
         // Print the X axis label
         Serial.print(j);
         // If single digit, increase count by 1
-        if (j<10) { count++; } 
+        if (j < 10) { count++; } 
         // Else if double digit, we skip one loop so the X axis will not be too long, then increase count by 2
-        else if (j<100) { j+=1; count+=2; } 
+        else if (j < 100) { j += 1; count += 2; } 
         // Else it is triple digit, we skip two loops and increase count by 3
-        else { j+=2; count+=3; }    
+        else { j += 2; count += 3; }    
     }
 
     // Else just print white spaces
     else 
     { 
-        Serial.print(" ");
+        Serial.print(F(" "));
         count++; 
     }
       
@@ -312,8 +308,8 @@ void drawGraph(unsigned int rangeLow, unsigned int rangeHigh, byte rows, byte xL
   Serial.println();
 
   // Print the X axis title
-  Serial.print("      "); // Spaces to account for Y axis and its labels
-  for (byte i=0; i<xTitleStart; i++) Serial.print(" "); // Print blank spaces to pad the title
+  Serial.print(F("      ")); // Spaces to account for Y axis and its labels
+  for (byte i=0; i<xTitleStart; i++) Serial.print(F(" ")); // Print blank spaces to pad the title
   Serial.println(xTitle);
 
 }
@@ -327,7 +323,7 @@ void clearSerial()
   delay(5);
 
   // Read and thus delete everything while the buffer is not empty
-  while(Serial.available()>0)
+  while(Serial.available() > 0)
   {
     Serial.read();
   }
@@ -335,6 +331,7 @@ void clearSerial()
 
 
 
+// Prompt the user to press Enter
 void promptUser()
 {
   Serial.println(F("Press Enter to test random numbers and generate reports."));
