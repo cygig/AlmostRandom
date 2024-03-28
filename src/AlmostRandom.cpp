@@ -121,8 +121,8 @@ byte AlmostRandom::getRandomByte()
     flags.runCode |= 0b1000;
   }
   
-  {
   if (flags.enableRamdom)
+  {
     result ^= getRamdom();
     flags.runCode |= 0b0100;
   }

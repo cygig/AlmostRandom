@@ -1,23 +1,36 @@
-DailyStruggleButton	KEYWORD1
+AlmostRandom		KEYWORD1
 
-set	KEYWORD2
-poll	KEYWORD2
-setDebounceTime	KEYWORD2
-enableLongPress	KEYWORD2
-disableLongPress	KEYWORD2
-enableMultiHit	KEYWORD2
-disableMultiHit	KEYWORD2
+getRandomByte		KEYWORD2
+getLastRandomByte	KEYWORD2
+getLastRunCode		KEYWORD2
+getRandomInt		KEYWORD2
+getRandomUInt		KEYWORD2
+getRandomLong		KEYWORD2
+getRandomULong		KEYWORD2
+getRandomFloat		KEYWORD2
+enableRanalog		KEYWORD2
+isEnabledRanalog	KEYWORD2
+setRanalog			KEYWORD2
+setRanalog			KEYWORD2
+setEvenIsZero		KEYWORD2
+isEvenZero			KEYWORD2
+getRanalog			KEYWORD2
+getLastRanalog		KEYWORD2
+enableRamdom		KEYWORD2
+isEnabledRamdom		KEYWORD2
+setRamdom			KEYWORD2
+getRamdom			KEYWORD2
+getLastRamdom		KEYWORD2
+isEnabledRanclock	KEYWORD2
+setRanclock			KEYWORD2
+setLatch			KEYWORD2
+getRanclock			KEYWORD2
+getLastRanclock		KEYWORD2
+enableRainput		KEYWORD2
+isEnabledRainput	KEYWORD2
+getRainput			KEYWORD2
+getLastRainput		KEYWORD2
+toBin				KEYWORD2
 
-INT_PULL_UP	LITERAL1
-EXT_PULL_UP	LITERAL1
-EXT_PULL_DOWN	LITERAL1
-
-BTN_RELEASED	LITERAL1
-BTN_PRESSED	LITERAL1
-
-neverPressed	LITERAL1
-onPress	LITERAL1
-onRelease	LITERAL1
-onHold	LITERAL1
-onLongPress	LITERAL1
-onMultiHit	LITERAL1
+byteSize			LITERAL1
+byteMask			LITERAL1
