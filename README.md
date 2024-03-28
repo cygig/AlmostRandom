@@ -6,7 +6,7 @@ AlmostRandom generates random number from a few entropy sources within the Ardui
 
 This library harnesses various sources of randomness, including the parity of analogRead() values, the contents of RAM, the values of internal timers and micros() and millis().
 
-AlmostRandom serves as a compelling alternative to the built-in random() function, offering numbers closer to true randomness and increased unpredictability, but takes a longer time to generate (1-2 milliseconds each).
+AlmostRandom serves as a compelling alternative to the built-in random() function, offering numbers closer to true randomness and increased unpredictability, but takes a longer time to generate (1-2 milliseconds each on traditional AVR Arduino).
 
 Please note that AlmostRandom is designed for non-critical applications and may not be suitable for tasks requiring high levels of cryptographic strength or security. 
 
@@ -25,6 +25,7 @@ Please note that AlmostRandom is designed for non-critical applications and may 
   - [Rainput: Imprecise Humans](#rainput-imprecise-humans)
   - [AmostRandom: Altogether Now!](#amostrandom-altogether-now)
   - [Speed](#speed)
+  - [Conclusion on Random Numbers](#conclusion-on-random-numbers)
 - [Public Functions](#public-functions)
   - [InsertionSort Functions](#insertionsort-functions)
 - [Extra: Setup Photos](#extra-setup-photos)
@@ -261,7 +262,6 @@ Taking one random byte from each of the four methods, we can once again XOR them
 
 The minimal setup uses one pin with no antenna for analogRead, while the maximal one uses all possible analog pins on the development board with antennae of various length. All of them give decent results and it did not seem to matter if antennae are used or not.
 
-Obviously, more research is needed to prove the quality of these random numbers, but I would say these should be good enough for most non-critical, unimportant, causal, recreational activities requiring random numbers.
 
 Here are the overview for the other boards:
 
@@ -281,6 +281,11 @@ I produced five sets of 10,000 random numbers to get the average time needed to 
 | Ranclock     | 0.00064    | 0.00084        | 0.00084          |
 | Rainput      | 0.04766    | 0.05660        | 0.05684          |
 | AlmostRandom | 1.41178    | 1.99264        | 2.25728          |
+
+
+## Conclusion on Random Numbers
+
+Obviously, more research is needed to prove the quality of these random numbers, but I would say these should be good enough for most non-critical, unimportant, causal, recreational activities requiring random numbers. I would this this would be good enough for lotteries, lucky draws or to seed pseudo-random numbers.
 
 <br><br>
 
