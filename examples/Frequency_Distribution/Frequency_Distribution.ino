@@ -15,12 +15,7 @@ if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth F
 // Example: Frequency Distribution
 // This example will generate a report to show the frequency distribution of the random bytes in both text and graph form. 
 
-#include "C:\Users\cygig\Desktop\AlmostRandom\src\AlmostRandom.h"
-#include "C:\Users\cygig\Desktop\AlmostRandom\src\AlmostRandom_ranalog.cpp"
-#include "C:\Users\cygig\Desktop\AlmostRandom\src\AlmostRandom_ramdom.cpp"
-#include "C:\Users\cygig\Desktop\AlmostRandom\src\AlmostRandom_ranclock.cpp"
-#include "C:\Users\cygig\Desktop\AlmostRandom\src\AlmostRandom_rainput.cpp"
-#include "C:\Users\cygig\Desktop\AlmostRandom\src\AlmostRandom.cpp"
+#include <AlmostRandom.h>
 
 // Declare an instance of AlmostRandom
 AlmostRandom ar;
@@ -57,20 +52,26 @@ void setup()
 
 void loop()
 {
+  // Wait for user to press Enter
   while(Serial.available() == 0){}
   
+  // Generate and store the random numbers
   generateRandomNo();
 
+  // Generate the text report
   Serial.println(F("\nText Report (Possible Value: Frequency)\n---------------------------------------"));
-  drawTextReport(8);
+  drawTextReport(8); // 8 means 8 columns per row
 
+  // Generate the graphic report
+  // We split into two graphs due to the limited details of ASCII characters
+  // and the lack of space on Serial monitor
   Serial.println(F("\nFrequency Graph\n---------------"));
-  drawGraph(0, 127, 24, 16);
-  drawGraph(128, 255, 24, 16);
+  drawGraph(0, 127, 32, 16); // Draw for data 0 to 127, 32 rows, and display the X axis labels at an intervalof 16 values
+  drawGraph(128, 255, 32, 16); // Draw for data 128 to 255, 32 rows, and display the X axis labels at an intervalof 16 values
 
   Serial.println();
-  promptUser();
-  clearSerial();
+  promptUser(); // User need to press Enter to start the random number generation
+  clearSerial(); // Clear Serial buffer
 }
 
 

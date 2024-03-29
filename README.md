@@ -40,7 +40,8 @@ Please note that AlmostRandom is designed for non-critical applications and may 
 <br><br>
 
 # Updates
-- 0.17.0
+
+- 0.21.0
     - Ready to go.
 - 0.10.0
 	- Finished implementing most methods.
@@ -282,10 +283,12 @@ I produced five sets of 10,000 random numbers to get the average time needed to 
 | Rainput      | 0.04766    | 0.05660        | 0.05684          |
 | AlmostRandom | 1.41178    | 1.99264        | 2.25728          |
 
+Tests are not done on the ESP32-S3 and Mega, but due to their large RAM, I suspect it will take much longer than these. Feel free to adjust the portion of the RAM to be used for AlmostRandom.
+
 
 ## Conclusion on Random Numbers
 
-Obviously, more research is needed to prove the quality of these random numbers, but I would say these should be good enough for most non-critical, unimportant, causal, recreational activities requiring random numbers. I would this this would be good enough for lotteries, lucky draws or to seed pseudo-random numbers.
+Obviously, more research is needed to prove the quality of these random numbers, but I would say these should be good enough for most non-critical, unimportant, causal, recreational activities requiring random numbers. I would think this would be good enough for lotteries, lucky draws or to seed pseudo-random numbers.
 
 <br><br>
 
